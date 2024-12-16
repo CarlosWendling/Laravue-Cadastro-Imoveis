@@ -1,5 +1,4 @@
 import '../css/app.css';
-import './bootstrap';
 
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
@@ -11,6 +10,7 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import '@mdi/font/css/materialdesignicons.css'
 import { md1 } from 'vuetify/blueprints'
+import { Link, Head } from '@inertiajs/vue3';
 
 const vuetify = createVuetify({
   components,
@@ -33,6 +33,8 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .use(vuetify)
+            .component("Link", Link)
+            .component("Head", Head)
             .mount(el);
     },
     progress: {
