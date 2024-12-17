@@ -19,7 +19,6 @@
 
         <v-app-bar class="px-5">
             <v-app-bar-nav-icon @click="isDrawerOpen = !isDrawerOpen"></v-app-bar-nav-icon>
-            <v-app-bar-title>{{ $page.component }}</v-app-bar-title>
         </v-app-bar>
 
         <v-main  class="bg-gray-100">

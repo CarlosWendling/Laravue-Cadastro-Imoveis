@@ -3,8 +3,7 @@
 </script>
 
 <template>
-    <Head title="Pessoas" />
-
-    <Layout>    
+    <Layout>
+        <Head title="Cadastro Pessoa" />
     </Layout>
 </template>

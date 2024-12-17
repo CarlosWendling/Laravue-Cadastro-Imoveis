@@ -17,6 +17,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', function () { return Inertia::render('Home'); })->name('home');
 
     Route::get('/pessoas', [PessoaController::class, 'index'])->name('pessoas');
+    Route::get('/pessoas/cadastro', [PessoaController::class, 'create'])->name('pessoas.cadastro');
+
+
     Route::get('/imoveis', [ImovelController::class, 'index'])->name('imoveis');
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios');
 

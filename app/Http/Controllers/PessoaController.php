@@ -8,6 +8,10 @@ use Inertia\Inertia;
 class PessoaController extends Controller
 {
     function index () {
-        return Inertia::render('Pessoas');
+        return Inertia::render('Pessoas/Pessoas');
+    }
+
+    function create () {
+        return Inertia::render('Pessoas/CadastroPessoa');
     }
 }
