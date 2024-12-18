@@ -1,17 +1,37 @@
 <script setup>
-    import { ref } from 'vue';
+    import { ref, watch } from 'vue';
+    import { useForm } from '@inertiajs/vue3'
 
-    const data = {
+    const data = useForm ({
         nome: null,
         cpf: null,
         dataNascimento: null,
         sexo: null,
         email: null,
         telefone: null
+    })
+
+    // Date Picker
+    const dataSelecionada = ref()
+    const dataFront = ref()
+
+    const formatDateBack = (dateString) => {
+        const options = {year: 'numeric', month: '2-digit', day: '2-digit'}
+
+        const data = new Date(dateString)
+            .toLocaleDateString('en-CA', options)
+        
+        return `${data}`
     }
 
-    // Form Validation
-    const valid = ref(false)
+    const formatDate = (dateString) => {
+        let [ano, mes, dia] = dateString.split('-')
+        return `${dia}/${mes}/${ano}`
+    }
+
+    watch(dataSelecionada, () => {
+        dataFront.value = formatDate(formatDateBack(dataSelecionada.value))
+    })
 
     // Name
     const nameRules = [
@@ -37,16 +57,12 @@
             if (value) {
                 if (value.includes('@')) return true
 
-                return 'Email Inválido'
+                return 'Email inválido'
             }
-
+            
             return true
         }
     ]
-
-    // Data Picker
-    let dataSelecionada = ref()
-
 
     // Sexo Select
     const items = [
@@ -71,7 +87,7 @@
 
                 return 'Telefone inválido'
             }
-
+            
             return true
         }
     ]
@@ -79,7 +95,7 @@
 </script>
 
 <template>
-    <v-form v-model="valid">
+    <v-form>
         <v-container>
             <v-row class="pl-3 pt-6">
                 <h1 class="text-2xl">Cadastro Pessoa</h1>
@@ -126,7 +142,7 @@
 
                 <v-col
                     cols="12"
-                    md="3"
+                    md="4"
                 >
                     <v-menu
                         :close-on-content-click="false"
@@ -138,7 +154,7 @@
                                 label="Data de Nascimento"
                                 prepend-icon="mdi-calendar-today"
                                 v-bind="props"
-                                :model-value="dataSelecionada"
+                                :model-value="dataFront"
                                 required
                             />
                         </template>
@@ -149,6 +165,7 @@
                             header="Data de Nasc"
                             v-model="dataSelecionada"
                             hide-weekdays
+                            :max="new Date()"
                         >
                             Data de Nascimento
                         </v-date-picker> 
