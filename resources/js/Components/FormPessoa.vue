@@ -30,7 +30,7 @@
         return `${dia}/${mes}/${ano}`
     }
 
-    watch(dataSelecionada, () => {
+    watch (dataSelecionada, () => {
         dataFront.value = formatDate(formatDateBack(dataSelecionada.value))
 
     })
@@ -79,7 +79,7 @@
         }
     }
     
-    watch(useCpf, () => {
+    watch (useCpf, () => {
         data.cpf = useCpf.value
     })
 
@@ -115,7 +115,7 @@
     const telRules = [
         value => {
             if (value) {
-                if (value.length == 11) return true
+                if (value.length == 15) return true
 
                 return 'Telefone inválido'
             }
@@ -123,6 +123,31 @@
             return true
         }
     ]
+
+    const formatTel = (tel) => {
+        if (tel == null) return ''
+
+        tel = tel.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
+
+        return tel
+    }
+
+    let useTel = ref(formatTel(data.telefone))
+
+    const telDinamico = () => {
+        if (useTel.value.length == 0) {
+            useTel.value = '('
+        } else if (useTel.value.length == 3) {
+            useTel.value += ') '
+        } else if (useTel.value.length == 10) {
+            useTel.value += '-'
+        }
+    }
+
+    watch (useTel, () => {
+        data.telefone = useTel.value
+        console.log(data.telefone)
+    })
 
 </script>
 
@@ -225,9 +250,10 @@
                     <NumberInput  
                         label="Telefone"
                         placeholder="(00) 00000-0000"
-                        minlength="11" 
-                        maxlength="11"
-                        v-model="data.telefone"
+                        minlength="15" 
+                        maxlength="15"
+                        @keydown="telDinamico"
+                        v-model="useTel"
                         :rules="telRules"
                     />
                 </v-col>
