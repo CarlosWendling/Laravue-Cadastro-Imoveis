@@ -1,6 +1,7 @@
 <script setup>
     import { ref, watch } from 'vue';
     import { useForm } from '@inertiajs/vue3'
+    import NumberInput from './NumberInput.vue';
 
     const data = useForm ({
         nome: null,
@@ -117,7 +118,7 @@
                     cols="12"
                     md="4"
                 >
-                    <v-text-field 
+                    <NumberInput 
                         v-model="data.cpf"
                         :rules="cpfRules"
                         label="CPF"
@@ -188,7 +189,7 @@
                 <v-col
                     cols="4"
                 >
-                    <v-text-field  
+                    <NumberInput  
                         label="Telefone"
                         placeholder="(00) 00000-0000"
                         minlength="11" 
