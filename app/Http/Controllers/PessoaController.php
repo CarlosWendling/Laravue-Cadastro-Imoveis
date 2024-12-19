@@ -9,7 +9,9 @@ use Inertia\Inertia;
 class PessoaController extends Controller
 {
     function index () {
-        return Inertia::render('Pessoas/Pessoas');
+        $pessoas = Pessoa::all();
+
+        return Inertia::render('Pessoas/Pessoas', ['pessoas' => $pessoas]);
     }
 
     function create () {

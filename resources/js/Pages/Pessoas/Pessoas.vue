@@ -5,6 +5,12 @@
         pessoas: Object
     })
 
+    // Formatar a data de nascimento para o formato brasileiro
+    const formatDate = (dateString) => {
+        let [ano, mes, dia] = dateString.split('-')
+        return `${dia}/${mes}/${ano}`
+    }
+
 </script>
 
 <template>
@@ -32,7 +38,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr></tr>
+                <tr v-for="pessoa in props.pessoas">
+                    <td>{{ pessoa.id }}</td>
+                    <td>{{ pessoa.nome }}</td>
+                    <td>{{ pessoa.cpf }}</td>
+                    <td>{{ formatDate(pessoa.data_nascimento) }}</td>
+                    <td>{{ pessoa.sexo }}</td>
+                    <td></td>
+                </tr>
             </tbody>
         </v-table>
     </Layout>
