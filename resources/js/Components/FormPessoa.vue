@@ -32,7 +32,16 @@
 
     watch(dataSelecionada, () => {
         dataFront.value = formatDate(formatDateBack(dataSelecionada.value))
+
     })
+
+    const dateRules = [
+        value => {
+            if (value) return true
+
+            return 'Selecione uma data'
+        }
+    ]
 
     // Name
     const nameRules = [
@@ -46,11 +55,33 @@
     // CPF
     const cpfRules = [
         value => {
-                if (value && value.length == 11) return true
+                if (value && value.length == 14) return true
 
                 return 'CPF inválido'
         }
     ]
+
+    const formatCpf = (cpf) => {
+        if (cpf == null) return ''
+
+        cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+
+        return cpf
+    }
+
+    let useCpf = ref(formatCpf(data.cpf))
+
+    const cpfDinamico = () => {
+        if(useCpf.value.length == 3 || useCpf.value.length == 7){    
+            useCpf.value += '.'
+        }else if(useCpf.value.length == 11) {
+            useCpf.value += '-';
+        }
+    }
+    
+    watch(useCpf, () => {
+        data.cpf = useCpf.value
+    })
 
     // Email
     const emailRules = [
@@ -119,11 +150,12 @@
                     md="4"
                 >
                     <NumberInput 
-                        v-model="data.cpf"
+                        v-model="useCpf"
+                        @keydown="cpfDinamico()"
                         :rules="cpfRules"
                         label="CPF"
-                        minlength="11" 
-                        maxlength="11"
+                        minlength="14" 
+                        maxlength="14"
                         required
                     />
                 </v-col>
@@ -156,6 +188,7 @@
                                 prepend-icon="mdi-calendar-today"
                                 v-bind="props"
                                 :model-value="dataFront"
+                                :rules="dateRules"
                                 required
                             />
                         </template>
