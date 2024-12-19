@@ -12,6 +12,8 @@
         telefone: null
     })
 
+    let erros = ref(0)
+
     // Date Picker
     const dataSelecionada = ref()
     const dataFront = ref()
@@ -32,6 +34,7 @@
 
     watch (dataSelecionada, () => {
         dataFront.value = formatDate(formatDateBack(dataSelecionada.value))
+        data.dataNascimento = formatDateBack(dataSelecionada.value)
 
     })
 
@@ -39,6 +42,7 @@
         value => {
             if (value) return true
 
+            erros.value += 1
             return 'Selecione uma data'
         }
     ]
@@ -48,6 +52,7 @@
         value => {
             if (value && value.length > 8) return true
 
+            erros.value += 1
             return 'Nome inválido'
         }
     ]
@@ -55,9 +60,10 @@
     // CPF
     const cpfRules = [
         value => {
-                if (value && value.length == 14) return true
+            if (value && value.length == 14) return true
 
-                return 'CPF inválido'
+            erros.value += 1
+            return 'CPF inválido'
         }
     ]
 
@@ -89,6 +95,7 @@
             if (value) {
                 if (value.includes('@')) return true
 
+                erros.value += 1
                 return 'Email inválido'
             }
             
@@ -107,6 +114,7 @@
         value => {
             if (value) return true
 
+            erros.value += 1
             return 'Selecione uma opção'
         }
     ]
@@ -117,6 +125,7 @@
             if (value) {
                 if (value.length == 15) return true
 
+                erros.value += 1
                 return 'Telefone inválido'
             }
             
@@ -146,13 +155,20 @@
 
     watch (useTel, () => {
         data.telefone = useTel.value
-        console.log(data.telefone)
     })
 
+    // Envio do Form
+    const submit = () => {
+        if (erros.value == 0) {
+            data.post('/pessoas/store', data)
+        }
+        erros.value = 0
+    }
+    
 </script>
 
 <template>
-    <v-form>
+    <v-form @submit.prevent="submit">
         <v-container>
             <v-row class="pl-3 pt-6">
                 <h1 class="text-2xl">Cadastro Pessoa</h1>
@@ -163,7 +179,7 @@
                     md="8"
                 >
                     <v-text-field 
-                        v-model="data.name"
+                        v-model="data.nome"
                         :rules="nameRules"
                         label="Nome Completo"
                         required
@@ -237,7 +253,6 @@
                         :items="items"
                         v-model="data.sexo"
                         :rules="selectRules"
-                        clearable
                         required
                     />
                 </v-col>
@@ -260,6 +275,8 @@
 
                 <v-btn
                     color="primary"
+                    :disabled="data.processing"
+                    type="submit"
                 >
                     Cadastrar
                 </v-btn>
