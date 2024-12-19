@@ -6,10 +6,14 @@
     const data = useForm ({
         nome: null,
         cpf: null,
-        dataNascimento: null,
+        data_nascimento: null,
         sexo: null,
         email: null,
         telefone: null
+    })
+
+    defineProps ({
+        errors: Object
     })
 
     let erros = ref(0)
@@ -34,39 +38,11 @@
 
     watch (dataSelecionada, () => {
         dataFront.value = formatDate(formatDateBack(dataSelecionada.value))
-        data.dataNascimento = formatDateBack(dataSelecionada.value)
+        data.data_nascimento = formatDateBack(dataSelecionada.value)
 
     })
 
-    const dateRules = [
-        value => {
-            if (value) return true
-
-            erros.value += 1
-            return 'Selecione uma data'
-        }
-    ]
-
-    // Name
-    const nameRules = [
-        value => {
-            if (value && value.length > 8) return true
-
-            erros.value += 1
-            return 'Nome inválido'
-        }
-    ]
-
     // CPF
-    const cpfRules = [
-        value => {
-            if (value && value.length == 14) return true
-
-            erros.value += 1
-            return 'CPF inválido'
-        }
-    ]
-
     const formatCpf = (cpf) => {
         if (cpf == null) return ''
 
@@ -89,20 +65,6 @@
         data.cpf = useCpf.value
     })
 
-    // Email
-    const emailRules = [
-        value => {
-            if (value) {
-                if (value.includes('@')) return true
-
-                erros.value += 1
-                return 'Email inválido'
-            }
-            
-            return true
-        }
-    ]
-
     // Sexo Select
     const items = [
         'Masculino',
@@ -110,29 +72,7 @@
         'Outro'
     ]
 
-    const selectRules = [
-        value => {
-            if (value) return true
-
-            erros.value += 1
-            return 'Selecione uma opção'
-        }
-    ]
-
     // Telefone
-    const telRules = [
-        value => {
-            if (value) {
-                if (value.length == 15) return true
-
-                erros.value += 1
-                return 'Telefone inválido'
-            }
-            
-            return true
-        }
-    ]
-
     const formatTel = (tel) => {
         if (tel == null) return ''
 
@@ -180,9 +120,9 @@
                 >
                     <v-text-field 
                         v-model="data.nome"
-                        :rules="nameRules"
                         label="Nome Completo"
                         required
+                        :error-messages="data.errors.nome"
                     />
                 </v-col>
 
@@ -193,11 +133,11 @@
                     <NumberInput 
                         v-model="useCpf"
                         @keydown="cpfDinamico()"
-                        :rules="cpfRules"
                         label="CPF"
                         minlength="14" 
                         maxlength="14"
                         required
+                        :error-messages="data.errors.cpf"
                     />
                 </v-col>
             </v-row>
@@ -209,8 +149,8 @@
                 >
                     <v-text-field 
                         v-model="data.email"
-                        :rules="emailRules"
                         label="Email"
+                        :error-messages="data.errors.email"
                     />
                 </v-col>
 
@@ -229,8 +169,8 @@
                                 prepend-icon="mdi-calendar-today"
                                 v-bind="props"
                                 :model-value="dataFront"
-                                :rules="dateRules"
                                 required
+                                :error-messages="data.errors.data_nascimento"
                             />
                         </template>
 
@@ -252,8 +192,8 @@
                         label="Sexo"
                         :items="items"
                         v-model="data.sexo"
-                        :rules="selectRules"
                         required
+                        :error-messages="data.errors.sexo"
                     />
                 </v-col>
             </v-row>
@@ -269,7 +209,7 @@
                         maxlength="15"
                         @keydown="telDinamico"
                         v-model="useTel"
-                        :rules="telRules"
+                        :error-messages="data.errors.telefone"
                     />
                 </v-col>
 

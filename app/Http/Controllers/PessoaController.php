@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePessoaRequest;
 use App\Models\Pessoa;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PessoaController extends Controller
@@ -16,17 +16,9 @@ class PessoaController extends Controller
         return Inertia::render('Pessoas/CadastroPessoa');
     }
 
-    function store (Request $request) {
-        $pessoa = new Pessoa;
-
-        $pessoa->nome = $request->nome;
-        $pessoa->cpf = $request->cpf;
-        $pessoa->data_nascimento = $request->dataNascimento;
-        $pessoa->sexo = $request->sexo;
-        $pessoa->email = $request->email;
-        $pessoa->telefone = $request->telefone;
-
-        $pessoa->save();
+    function store (StorePessoaRequest $request) {
+        
+        Pessoa::create($request->validated());
 
         return redirect('/pessoas');
     }
