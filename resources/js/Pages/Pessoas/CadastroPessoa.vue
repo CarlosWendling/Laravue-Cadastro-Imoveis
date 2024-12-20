@@ -7,6 +7,6 @@
     <Layout>
         <Head title="Cadastro Pessoa" />
 
-        <FormPessoa />
+        <FormPessoa textBtn="Cadastrar" />
     </Layout>
 </template>

@@ -11,6 +11,7 @@ import * as directives from 'vuetify/directives'
 import '@mdi/font/css/materialdesignicons.css'
 import { md1 } from 'vuetify/blueprints'
 import { Link, Head } from '@inertiajs/vue3';
+import Btn from './Components/Btn.vue';
 
 const vuetify = createVuetify({
   components,
@@ -35,6 +36,7 @@ createInertiaApp({
             .use(vuetify)
             .component("Link", Link)
             .component("Head", Head)
+            .component("Btn", Btn)
             .mount(el);
     },
     progress: {

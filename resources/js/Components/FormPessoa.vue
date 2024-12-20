@@ -3,7 +3,7 @@
     import { useForm } from '@inertiajs/vue3'
     import NumberInput from './NumberInput.vue';
 
-    const data = useForm ({
+    let data = useForm ({
         nome: null,
         cpf: null,
         data_nascimento: null,
@@ -12,28 +12,42 @@
         telefone: null
     })
 
-    defineProps ({
-        errors: Object
+    const props = defineProps ({
+        pessoa: Object,
+        textBtn: String
     })
 
-    let erros = ref(0)
+    if (props.pessoa != null) {
+        data = {
+            nome: props.pessoa.nome,
+            cpf: props.pessoa.cpf,
+            data_nascimento: props.pessoa.data_nascimento,
+            sexo: props.pessoa.sexo,
+            email: props.pessoa.email,
+            telefone: props.pessoa.telefone
+        }
+    }
 
     // Date Picker
     const dataSelecionada = ref()
     const dataFront = ref()
-
+    
     const formatDateBack = (dateString) => {
         const options = {year: 'numeric', month: '2-digit', day: '2-digit'}
-
+        
         const data = new Date(dateString)
-            .toLocaleDateString('en-CA', options)
+        .toLocaleDateString('en-CA', options)
         
         return `${data}`
     }
-
+    
     const formatDate = (dateString) => {
         let [ano, mes, dia] = dateString.split('-')
         return `${dia}/${mes}/${ano}`
+    }
+    
+    if (data.data_nascimento != null) {
+        dataFront.value = ref(formatDate(data.data_nascimento))
     }
 
     watch (dataSelecionada, () => {
@@ -99,10 +113,7 @@
 
     // Envio do Form
     const submit = () => {
-        if (erros.value == 0) {
-            data.post('/pessoas/store', data)
-        }
-        erros.value = 0
+        data.post('/pessoas/store', data)
     }
     
 </script>
@@ -122,7 +133,7 @@
                         v-model="data.nome"
                         label="Nome Completo"
                         required
-                        :error-messages="data.errors.nome"
+                        :error-messages="data.errors?.nome"
                     />
                 </v-col>
 
@@ -137,7 +148,8 @@
                         minlength="14" 
                         maxlength="14"
                         required
-                        :error-messages="data.errors.cpf"
+                        :disabled="props.textBtn == 'Atualizar'"
+                        :error-messages="data.errors?.cpf"
                     />
                 </v-col>
             </v-row>
@@ -150,7 +162,7 @@
                     <v-text-field 
                         v-model="data.email"
                         label="Email"
-                        :error-messages="data.errors.email"
+                        :error-messages="data.errors?.email"
                     />
                 </v-col>
 
@@ -170,7 +182,7 @@
                                 v-bind="props"
                                 :model-value="dataFront"
                                 required
-                                :error-messages="data.errors.data_nascimento"
+                                :error-messages="data.errors?.data_nascimento"
                             />
                         </template>
 
@@ -193,7 +205,7 @@
                         :items="items"
                         v-model="data.sexo"
                         required
-                        :error-messages="data.errors.sexo"
+                        :error-messages="data.errors?.sexo"
                     />
                 </v-col>
             </v-row>
@@ -209,17 +221,16 @@
                         maxlength="15"
                         @keydown="telDinamico"
                         v-model="useTel"
-                        :error-messages="data.errors.telefone"
+                        :error-messages="data.errors?.telefone"
                     />
                 </v-col>
 
-                <v-btn
-                    color="primary"
+                <Btn
                     :disabled="data.processing"
                     type="submit"
                 >
-                    Cadastrar
-                </v-btn>
+                    {{ textBtn }}
+                </Btn>
             </v-row>
         </v-container>
     </v-form>

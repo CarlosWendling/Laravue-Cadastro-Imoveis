@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pessoas', [PessoaController::class, 'index'])->name('pessoas');
     Route::get('/pessoas/cadastro', [PessoaController::class, 'create'])->name('pessoas.cadastro');
     Route::post('/pessoas/store', [PessoaController::class, 'store'])->name('pessoas.store');
+    Route::get('/pessoa/{id}', [PessoaController::class, 'show'])->name('pessoa.show');
 
 
     Route::get('/imoveis', [ImovelController::class, 'index'])->name('imoveis');

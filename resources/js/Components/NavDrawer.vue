@@ -29,7 +29,7 @@
     >
         <NavLink
             :href="route('pessoas')"
-            :active="$page.component === 'Pessoas'"
+            :active="$page.component.includes('Pessoa')"
         >
             Pessoas
         </NavLink>

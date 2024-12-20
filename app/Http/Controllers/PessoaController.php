@@ -24,4 +24,10 @@ class PessoaController extends Controller
 
         return redirect('/pessoas');
     }
+
+    function show ($id) {
+        $pessoa = Pessoa::findOrFail($id);
+
+        return Inertia::render('Pessoas/VisualizarPessoa', ['pessoa' => $pessoa]);
+    }
 }

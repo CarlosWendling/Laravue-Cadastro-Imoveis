@@ -20,21 +20,21 @@
         <div class="flex justify-between py-7 border-b-2 items-center">
             <h1 class="text-2xl">Pessoas</h1>
 
-            <v-btn color="primary">
+            <Btn>
                 <Link href="/pessoas/cadastro">
                     Cadastrar
                 </Link>
-            </v-btn>
+            </Btn>
         </div>
         <v-table>
             <thead>
-                <tr>
+                <tr class="text-base">
                     <th>Id</th>
                     <th>Nome</th>
                     <th>CPF</th>
                     <th>Data Nasc</th>
                     <th>Sexo</th>
-                    <th>Ações</th>
+                    <th class="flex justify-center items-center pr-12">Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,7 +44,27 @@
                     <td>{{ pessoa.cpf }}</td>
                     <td>{{ formatDate(pessoa.data_nascimento) }}</td>
                     <td>{{ pessoa.sexo }}</td>
-                    <td></td>
+                    <td>
+                        <Link :href="route('pessoa.show', pessoa.id)">
+                            <v-btn
+                                variant="tonal"
+                                prepend-icon="mdi-pencil"
+                                class="mr-2"
+                            >
+                                Visualizar
+                            </v-btn>
+                        </Link>
+
+                        <Link href="#">
+                            <v-btn
+                                variant="tonal"
+                                prepend-icon="mdi-delete"
+                            >
+                                Excluir
+                            </v-btn>
+                        </Link>
+
+                    </td>
                 </tr>
             </tbody>
         </v-table>
