@@ -3,14 +3,14 @@
     import { useForm } from '@inertiajs/vue3'
     import NumberInput from './NumberInput.vue';
 
-    let data = useForm ({
+    let data = {
         nome: null,
         cpf: null,
         data_nascimento: null,
         sexo: null,
         email: null,
         telefone: null
-    })
+    }
 
     const props = defineProps ({
         pessoa: Object,
@@ -19,6 +19,7 @@
 
     if (props.pessoa != null) {
         data = {
+            id: props.pessoa.id,
             nome: props.pessoa.nome,
             cpf: props.pessoa.cpf,
             data_nascimento: props.pessoa.data_nascimento,
@@ -27,6 +28,8 @@
             telefone: props.pessoa.telefone
         }
     }
+
+    const form = useForm(data)
 
     // Date Picker
     const dataSelecionada = ref()
@@ -52,7 +55,7 @@
 
     watch (dataSelecionada, () => {
         dataFront.value = formatDate(formatDateBack(dataSelecionada.value))
-        data.data_nascimento = formatDateBack(dataSelecionada.value)
+        form.data_nascimento = formatDateBack(dataSelecionada.value)
 
     })
 
@@ -65,7 +68,7 @@
         return cpf
     }
 
-    let useCpf = ref(formatCpf(data.cpf))
+    let useCpf = ref(formatCpf(form.cpf))
 
     const cpfDinamico = () => {
         if(useCpf.value.length == 3 || useCpf.value.length == 7){    
@@ -76,7 +79,7 @@
     }
     
     watch (useCpf, () => {
-        data.cpf = useCpf.value
+        form.cpf = useCpf.value
     })
 
     // Sexo Select
@@ -95,7 +98,7 @@
         return tel
     }
 
-    let useTel = ref(formatTel(data.telefone))
+    let useTel = ref(formatTel(form.telefone))
 
     const telDinamico = () => {
         if (useTel.value.length == 0) {
@@ -108,14 +111,18 @@
     }
 
     watch (useTel, () => {
-        data.telefone = useTel.value
+        form.telefone = useTel.value
     })
 
     // Envio do Form
     const submit = () => {
-        data.post('/pessoas/store', data)
+        if (props.textBtn == 'Atualizar') {
+            form.put(route('pessoa.update', data.id))
+        } else {
+            form.post('/pessoas/store', data)
+        }
     }
-    
+
 </script>
 
 <template>
@@ -130,7 +137,7 @@
                     md="8"
                 >
                     <v-text-field 
-                        v-model="data.nome"
+                        v-model="form.nome"
                         label="Nome Completo"
                         required
                         :error-messages="data.errors?.nome"
@@ -160,7 +167,7 @@
                     md="5"
                 >
                     <v-text-field 
-                        v-model="data.email"
+                        v-model="form.email"
                         label="Email"
                         :error-messages="data.errors?.email"
                     />
@@ -203,7 +210,7 @@
                     <v-select 
                         label="Sexo"
                         :items="items"
-                        v-model="data.sexo"
+                        v-model="form.sexo"
                         required
                         :error-messages="data.errors?.sexo"
                     />
