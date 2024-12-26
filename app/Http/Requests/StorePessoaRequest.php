@@ -27,7 +27,7 @@ class StorePessoaRequest extends FormRequest
             'data_nascimento' => 'required',
             'sexo' => 'required',
             'email' => 'nullable|email',
-            'telefone' => 'nullable|min:15|max:15'
+            'telefone' => 'nullable|min:11|max:11'
         ];
     }
 

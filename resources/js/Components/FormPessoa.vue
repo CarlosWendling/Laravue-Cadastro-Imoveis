@@ -86,7 +86,6 @@
     
     watch (cpfFront, () => {
         form.cpf = formatCpfBack(cpfFront.value)
-        console.log(form.cpf)
     })
 
     // Sexo Select
@@ -97,7 +96,7 @@
     ]
 
     // Telefone
-    const formatTel = (tel) => {
+    const formatTelFront = (tel) => {
         if (tel == null) return ''
 
         tel = tel.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
@@ -105,20 +104,27 @@
         return tel
     }
 
-    let useTel = ref(formatTel(form.telefone))
+    const formatTelBack = (tel) => {
+        tel = tel.replace(/\D/g, '')
+
+        return tel
+    }
+
+    let telFront = ref(formatTelFront(form.telefone))
+    form.telefone = formatTelBack(telFront.value)
 
     const telDinamico = () => {
-        if (useTel.value.length == 0) {
-            useTel.value = '('
-        } else if (useTel.value.length == 3) {
-            useTel.value += ') '
-        } else if (useTel.value.length == 10) {
-            useTel.value += '-'
+        if (telFront.value.length == 0) {
+            telFront.value = '('
+        } else if (telFront.value.length == 3) {
+            telFront.value += ') '
+        } else if (telFront.value.length == 10) {
+            telFront.value += '-'
         }
     }
 
-    watch (useTel, () => {
-        form.telefone = useTel.value
+    watch (telFront, () => {
+        form.telefone = formatTelBack(telFront.value)
     })
 
     // Envio do Form
@@ -233,7 +239,7 @@
                         minlength="15" 
                         maxlength="15"
                         @keydown="telDinamico"
-                        v-model="useTel"
+                        v-model="telFront"
                         :error-messages="form.errors.telefone"
                     />
                 </v-col>
