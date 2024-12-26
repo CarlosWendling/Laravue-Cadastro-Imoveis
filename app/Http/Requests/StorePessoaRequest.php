@@ -21,7 +21,8 @@ class StorePessoaRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+
+        $rules = [
             'nome' => 'required|min:6',
             'cpf' => 'required|unique:pessoas|min:11|max:11',
             'data_nascimento' => 'required',
@@ -29,6 +30,16 @@ class StorePessoaRequest extends FormRequest
             'email' => 'nullable|email',
             'telefone' => 'nullable|min:11|max:11'
         ];
+
+        if ($this->isMethod('post')) {
+            $rules['cpf'] = 'required|unique:pessoas|min:11|max:11';
+        }
+
+        if ($this->isMethod('put')) {
+            $rules['cpf'] = 'required|min:11|max:11';
+        }
+
+        return $rules;
     }
 
     public function messages (): array
