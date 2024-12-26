@@ -35,7 +35,7 @@ class PessoaController extends Controller
 
         $pessoa = Pessoa::findOrFail($id);
 
-        $pessoa->update($request->except('CPF'));
+        $pessoa->update($request->except('cpf'));
 
         return redirect('/pessoas');
     }

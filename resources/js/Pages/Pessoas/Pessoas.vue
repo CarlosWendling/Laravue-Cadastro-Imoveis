@@ -11,6 +11,12 @@
         return `${dia}/${mes}/${ano}`
     }
 
+    // Formatar o CPF
+    const formatCpfFront = (cpf) => {
+        cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+        return cpf
+    }
+
 </script>
 
 <template>
@@ -41,7 +47,7 @@
                 <tr v-for="pessoa in props.pessoas">
                     <td>{{ pessoa.id }}</td>
                     <td>{{ pessoa.nome }}</td>
-                    <td>{{ pessoa.cpf }}</td>
+                    <td>{{ formatCpfFront(pessoa.cpf) }}</td>
                     <td>{{ formatDate(pessoa.data_nascimento) }}</td>
                     <td>{{ pessoa.sexo }}</td>
                     <td>

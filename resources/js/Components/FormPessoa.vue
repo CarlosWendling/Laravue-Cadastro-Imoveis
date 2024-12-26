@@ -56,11 +56,10 @@
     watch (dataSelecionada, () => {
         dataFront.value = formatDate(formatDateBack(dataSelecionada.value))
         form.data_nascimento = formatDateBack(dataSelecionada.value)
-
     })
 
     // CPF
-    const formatCpf = (cpf) => {
+    const formatCpfFront = (cpf) => {
         if (cpf == null) return ''
 
         cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
@@ -68,18 +67,26 @@
         return cpf
     }
 
-    let useCpf = ref(formatCpf(form.cpf))
+    const formatCpfBack = (cpf) => {
+        cpf = cpf.replace(/\D/g, '')
+
+        return cpf
+    }
+
+    let cpfFront = ref(formatCpfFront(form.cpf))
+    form.cpf = formatCpfBack(cpfFront.value)
 
     const cpfDinamico = () => {
-        if(useCpf.value.length == 3 || useCpf.value.length == 7){    
-            useCpf.value += '.'
-        }else if(useCpf.value.length == 11) {
-            useCpf.value += '-';
+        if(cpfFront.value.length == 3 || cpfFront.value.length == 7){    
+            cpfFront.value += '.'
+        }else if(cpfFront.value.length == 11) {
+            cpfFront.value += '-';
         }
     }
     
-    watch (useCpf, () => {
-        form.cpf = useCpf.value
+    watch (cpfFront, () => {
+        form.cpf = formatCpfBack(cpfFront.value)
+        console.log(form.cpf)
     })
 
     // Sexo Select
@@ -140,7 +147,7 @@
                         v-model="form.nome"
                         label="Nome Completo"
                         required
-                        :error-messages="data.errors?.nome"
+                        :error-messages="form.errors.nome"
                     />
                 </v-col>
 
@@ -149,14 +156,13 @@
                     md="4"
                 >
                     <NumberInput 
-                        v-model="useCpf"
+                        v-model="cpfFront"
                         @keydown="cpfDinamico()"
                         label="CPF"
-                        minlength="14" 
                         maxlength="14"
                         required
                         :disabled="props.textBtn == 'Atualizar'"
-                        :error-messages="data.errors?.cpf"
+                        :error-messages="form.errors.cpf"
                     />
                 </v-col>
             </v-row>
@@ -169,7 +175,7 @@
                     <v-text-field 
                         v-model="form.email"
                         label="Email"
-                        :error-messages="data.errors?.email"
+                        :error-messages="form.errors.email"
                     />
                 </v-col>
 
@@ -189,7 +195,7 @@
                                 v-bind="props"
                                 :model-value="dataFront"
                                 required
-                                :error-messages="data.errors?.data_nascimento"
+                                :error-messages="form.errors.data_nascimento"
                             />
                         </template>
 
@@ -212,7 +218,7 @@
                         :items="items"
                         v-model="form.sexo"
                         required
-                        :error-messages="data.errors?.sexo"
+                        :error-messages="form.errors.sexo"
                     />
                 </v-col>
             </v-row>
@@ -228,7 +234,7 @@
                         maxlength="15"
                         @keydown="telDinamico"
                         v-model="useTel"
-                        :error-messages="data.errors?.telefone"
+                        :error-messages="form.errors.telefone"
                     />
                 </v-col>
 

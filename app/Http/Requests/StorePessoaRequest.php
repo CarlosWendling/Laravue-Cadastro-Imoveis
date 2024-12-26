@@ -23,12 +23,11 @@ class StorePessoaRequest extends FormRequest
     {
         return [
             'nome' => 'required|min:6',
-            'cpf' => 'required|min:14|max:14',
+            'cpf' => 'required|unique:pessoas|min:11|max:11',
             'data_nascimento' => 'required',
             'sexo' => 'required',
             'email' => 'nullable|email',
             'telefone' => 'nullable|min:15|max:15'
-
         ];
     }
 
@@ -37,6 +36,7 @@ class StorePessoaRequest extends FormRequest
         return [
             'nome.required' => 'O campo nome é obrigatório',
             'nome.min' => 'Preencha com o seu nome completo',
+            'cpf.unique' => 'CPF já cadastrado',
             'cpf.required' => 'O campo CPF é obrigatório',
             'cpf.min' => 'CPF inválido',
             'data_nascimento.required' => 'O campo da data de nascimento é obrigatório',
