@@ -1,5 +1,7 @@
 <script setup>
     import Layout from '@/Layouts/Layout.vue';
+    import { ref } from 'vue'
+    import { router } from '@inertiajs/vue3'
 
     const props = defineProps ({
         pessoas: Object
@@ -17,6 +19,19 @@
         return cpf
     }
 
+    // Exclusão de cadastro
+    const isDialogOpen = ref(false)
+
+    let pessoaExcluir = {
+        id: null,
+        nome: null
+    }
+
+    const excluir = (id) => {
+        router.delete(`/pessoa/destroy/${id}`)
+        isDialogOpen.value = false
+    }
+
 </script>
 
 <template>
@@ -25,6 +40,34 @@
     <Layout>
         <div class="flex justify-between py-7 border-b-2 items-center">
             <h1 class="text-2xl">Pessoas</h1>
+
+            <v-dialog
+                v-model="isDialogOpen"
+                width="450px"
+                attach="body"
+            >
+                <v-card class="pt-2 pb-1 px-3">
+                    <div class="flex justify-center">
+                        <v-card-title>Deseja excluir a pessoa: {{ pessoaExcluir.nome }}?</v-card-title>
+                    </div>
+
+                    <v-card-actions>
+                        <Btn
+                            @click="isDialogOpen = false"
+                            variant="tonal"
+                        >
+                            Cancelar
+                        </Btn>
+
+                        <Btn
+                            @click="excluir(pessoaExcluir.id)"
+                            variant="flat"
+                        >
+                            Excluir
+                        </Btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
 
             <Btn>
                 <Link href="/pessoas/cadastro">
@@ -44,32 +87,32 @@
                 </tr>
             </thead>
             <tbody>
+                <tr v-if="props.pessoas.length == 0">
+                    <td>Nenhuma pessoa cadastrada</td>
+                </tr>
                 <tr v-for="pessoa in props.pessoas">
                     <td>{{ pessoa.id }}</td>
                     <td>{{ pessoa.nome }}</td>
                     <td>{{ formatCpfFront(pessoa.cpf) }}</td>
                     <td>{{ formatDate(pessoa.data_nascimento) }}</td>
                     <td>{{ pessoa.sexo }}</td>
-                    <td>
-                        <Link :href="route('pessoa.show', pessoa.id)">
-                            <v-btn
-                                variant="tonal"
-                                prepend-icon="mdi-pencil"
-                                class="mr-2"
-                            >
-                                Visualizar
-                            </v-btn>
-                        </Link>
-
-                        <Link href="#">
-                            <v-btn
-                                variant="tonal"
-                                prepend-icon="mdi-delete"
-                            >
-                                Excluir
-                            </v-btn>
-                        </Link>
-
+                    <td class="flex items-center">
+                        <Btn
+                            variant="tonal"
+                            prepend-icon="mdi-pencil"
+                            class="mr-2"
+                        >
+                            <Link :href="route('pessoa.show', pessoa.id)">
+                                    Visualizar
+                            </Link>
+                        </Btn>
+                        <Btn
+                            variant="tonal"
+                            prepend-icon="mdi-delete"
+                            @click="isDialogOpen = true; pessoaExcluir.id = pessoa.id; pessoaExcluir.nome = pessoa.nome"
+                        >
+                            Excluir
+                        </Btn>
                     </td>
                 </tr>
             </tbody>

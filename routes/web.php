@@ -21,7 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/pessoas/store', [PessoaController::class, 'store'])->name('pessoas.store');
     Route::get('/pessoa/{id}', [PessoaController::class, 'show'])->name('pessoa.show');
     Route::put('/pessoa/update/{id}', [PessoaController::class, 'update'])->name('pessoa.update');
-
+    Route::delete('/pessoa/destroy/{id}', [PessoaController::class, 'destroy'])->name('pessoa.destroy');
 
     Route::get('/imoveis', [ImovelController::class, 'index'])->name('imoveis');
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios');
