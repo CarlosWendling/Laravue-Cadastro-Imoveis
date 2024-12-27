@@ -9,7 +9,15 @@ use Inertia\Inertia;
 class PessoaController extends Controller
 {
     public function index () {
-        $pessoas = Pessoa::all();
+        $pessoas = Pessoa::paginate(10)->through(fn($pessoa) => [
+            'id' => $pessoa->id,
+            'nome' => $pessoa->nome,
+            'cpf' => $pessoa->cpf,
+            'sexo' => $pessoa->sexo,
+            'data_nascimento' => $pessoa->data_nascimento,
+            'email' => $pessoa->email,
+            'telefone' => $pessoa->telefone
+        ]);
 
         return Inertia::render('Pessoas/Pessoas', ['pessoas' => $pessoas]);
     }

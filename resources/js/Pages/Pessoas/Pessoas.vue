@@ -2,6 +2,7 @@
     import Layout from '@/Layouts/Layout.vue';
     import { ref } from 'vue'
     import { router } from '@inertiajs/vue3'
+import Pagination from '@/Components/Pagination.vue';
 
     const props = defineProps ({
         pessoas: Object
@@ -90,7 +91,10 @@
                 <tr v-if="props.pessoas.length == 0">
                     <td>Nenhuma pessoa cadastrada</td>
                 </tr>
-                <tr v-for="pessoa in props.pessoas">
+                <tr 
+                    v-for="pessoa in props.pessoas.data"
+                    :key="pessoa.id"
+                >
                     <td>{{ pessoa.id }}</td>
                     <td>{{ pessoa.nome }}</td>
                     <td>{{ formatCpfFront(pessoa.cpf) }}</td>
@@ -117,5 +121,10 @@
                 </tr>
             </tbody>
         </v-table>
+        <!--Paginator-->
+        <Pagination 
+            :links="props.pessoas.links"
+            class="mt-6 pb-2"
+        />
     </Layout>
 </template>
