@@ -30,7 +30,7 @@ class PessoaController extends Controller
         
         Pessoa::create($request->validated());
 
-        return redirect('/pessoas');
+        return redirect('/pessoas')->with('success_message', 'Pessoa cadastrada com sucesso');
     }
 
     public function show ($id) {
@@ -47,12 +47,12 @@ class PessoaController extends Controller
 
         $pessoa->update($dadosAtualizados);
 
-        return redirect('/pessoas');
+        return redirect('/pessoas')->with('success_message', 'Pessoa atualizada com sucesso');
     }
 
     public function destroy ($id) {
         Pessoa::findOrFail($id)->delete();
 
-        return redirect('/pessoas');
+        return redirect('/pessoas')->with('success_message', 'Pessoa excluída com sucesso');
     }
 }

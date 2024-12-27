@@ -8,9 +8,9 @@
 </script>
 
 <template>
-    <Layout>
-        <Head :title="`Editar ${props.pessoa.nome}`" />
 
-        <FormPessoa :pessoa="props.pessoa" textBtn="Atualizar" />
-    </Layout>
+    <Head :title="`Editar ${props.pessoa.nome}`" />
+
+    <FormPessoa :pessoa="props.pessoa" textBtn="Atualizar" />
+
 </template>

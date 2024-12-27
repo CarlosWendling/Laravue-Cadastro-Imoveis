@@ -12,6 +12,8 @@ import '@mdi/font/css/materialdesignicons.css'
 import { md1 } from 'vuetify/blueprints'
 import { Link, Head } from '@inertiajs/vue3';
 import Btn from './Components/Btn.vue';
+import Layout from './Layouts/Layout.vue';
+import 'vue3-toastify/dist/index.css'
 
 const vuetify = createVuetify({
   components,
@@ -24,11 +26,16 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    resolve: (name) =>
-        resolvePageComponent(
-            `./Pages/${name}.vue`,
-            import.meta.glob('./Pages/**/*.vue'),
-        ),
+    resolve: (name) => {
+        const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
+        const page = pages[`./Pages/${name}.vue`].default;
+    
+        if (page.layout === undefined) {
+          page.layout = Layout;
+        }
+    
+        return page
+    },
     setup({ el, App, props, plugin }) {
         return createApp({ render: () => h(App, props) })
             .use(plugin)
