@@ -24,16 +24,20 @@ const vuetify = createVuetify({
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
+function aplicarLayout (name) {
+  return !name.startsWith('Auth/')
+}
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => {
         const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
         const page = pages[`./Pages/${name}.vue`].default;
     
-        if (page.layout === undefined) {
+        if (page.layout === undefined && aplicarLayout(name)) {
           page.layout = Layout;
         }
-    
+        
         return page
     },
     setup({ el, App, props, plugin }) {
