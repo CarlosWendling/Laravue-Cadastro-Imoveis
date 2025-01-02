@@ -1,10 +1,14 @@
 <script setup>
     import { ref } from 'vue'
     import { router } from '@inertiajs/vue3'
-    import Pagination from '@/Components/Pagination.vue';
+    import Pagination from '@/Components/Pagination.vue'
+    import Filtro from '@/Components/Filtro.vue'
 
     const props = defineProps ({
-        pessoas: Object
+        pessoas: Object,
+        errors: Object,
+        auth: Object,
+        flash: Object
     })
 
     // Formatar a data de nascimento para o formato brasileiro
@@ -37,7 +41,7 @@
 <template>
     <Head title="Pessoas" />
     
-    <div class="flex justify-between py-7 border-b-2 items-center">
+    <div class="flex justify-between py-5 border-b-2 items-center">
         <h1 class="text-2xl">Pessoas</h1>
 
         <v-dialog
@@ -68,11 +72,17 @@
             </v-card>
         </v-dialog>
 
-        <Btn>
-            <Link href="/pessoas/cadastro">
-                Cadastrar
-            </Link>
-        </Btn>
+        <div class="flex items-center">
+            
+            <Filtro />
+            
+            <Btn class="ml-3">
+                <Link href="/pessoas/cadastro">
+                    Cadastrar
+                </Link>
+            </Btn>
+        </div>
+
     </div>
     <v-table>
         <thead>
