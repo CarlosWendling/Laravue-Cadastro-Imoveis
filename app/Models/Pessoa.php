@@ -15,6 +15,10 @@ class Pessoa extends Model
         'telefone'
     ];
 
+    public function imoveis () {
+        return $this->hasMany(Imovel::class);
+    }
+
     public function scopeFilter ($query, array $filters) {
 
         if (!empty($filters['campo']) && !empty($filters['pesquisa'])) {
