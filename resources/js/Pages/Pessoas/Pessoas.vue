@@ -96,7 +96,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-if="props.pessoas.length == 0">
+            <tr v-if="props.pessoas.data.length == 0">
                 <td>Nenhuma pessoa cadastrada</td>
             </tr>
             <tr 

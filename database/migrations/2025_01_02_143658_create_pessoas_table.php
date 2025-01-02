@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('cpf', 11);
             $table->date('data_nascimento', 11);
             $table->string('sexo', 50);
-            $table->string('emai', 150)->nullable();
+            $table->string('email', 150)->nullable();
             $table->string('telefone', 11)->nullable();
             $table->timestamps();
         });
