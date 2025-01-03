@@ -40,7 +40,7 @@
     >
         <NavLink
             :href="route('imoveis')"
-            :active="$page.component === 'Imoveis'"
+            :active="$page.component.includes('Imoveis')"
         >
             Imóveis
         </NavLink>
@@ -51,7 +51,7 @@
     >
         <NavLink
             :href="route('usuarios')"
-            :active="$page.component === 'Usuarios'"
+            :active="$page.component.includes('Usuarios')"
         >
             Usuários
         </NavLink>
