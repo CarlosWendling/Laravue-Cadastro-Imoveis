@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePessoaRequest;
 use App\Models\Pessoa;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PessoaController extends Controller
 {
     public function index () {
+        $filtros = ['Nome', 'Cpf', 'Data de Nascimento', 'Sexo'];
+        $routeName = Route::currentRouteName();
+
         $pessoas = Pessoa::
             filter(request(['campo', 'pesquisa']))
             ->paginate(10)
@@ -24,7 +28,7 @@ class PessoaController extends Controller
             ])
             ->withQueryString();
 
-        return Inertia::render('Pessoas/Pessoas', ['pessoas' => $pessoas]);
+        return Inertia::render('Pessoas/Pessoas', ['pessoas' => $pessoas, 'filtros' => $filtros, 'routeName' => $routeName]);
     }
 
     public function create () {

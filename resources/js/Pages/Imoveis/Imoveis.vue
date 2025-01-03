@@ -3,6 +3,8 @@
 
     const props = defineProps ({
         imoveis: Object,
+        filtros: Array,
+        routeName: String,
         errors: Object,
         auth: Object,
         flash: Object
@@ -17,7 +19,7 @@
 
         <div class="flex items-center">
             
-            <Filtro />
+            <Filtro :filtros="props.filtros" :routeName="props.routeName" />
             
             <Btn class="ml-3">
                 <Link href="#">
@@ -31,7 +33,7 @@
             <tr class="text-base">
                 <th>Inscrição Municipal</th>
                 <th>Tipo</th>
-                <th>Logadouro</th>
+                <th>Logradouro</th>
                 <th>Número</th>
                 <th>Bairro</th>
                 <th>Contribuinte</th>

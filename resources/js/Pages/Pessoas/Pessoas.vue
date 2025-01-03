@@ -6,6 +6,8 @@
 
     const props = defineProps ({
         pessoas: Object,
+        filtros: Array,
+        routeName: String,
         errors: Object,
         auth: Object,
         flash: Object
@@ -74,7 +76,7 @@
 
         <div class="flex items-center">
             
-            <Filtro />
+            <Filtro :filtros="props.filtros" :routeName="props.routeName" />
             
             <Btn class="ml-3">
                 <Link href="/pessoas/cadastro">

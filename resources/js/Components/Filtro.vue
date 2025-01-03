@@ -4,12 +4,10 @@
     import NumberInput from './NumberInput.vue'
     import throttle from 'lodash/throttle'
 
-    const buscaCampos = [
-        'Nome',
-        'Cpf',
-        'Data de Nascimento',
-        'Sexo'
-    ]
+    const props = defineProps({
+        filtros: Array,
+        routeName: String
+    })
 
     const sexo = [
         'Masculino',
@@ -77,17 +75,17 @@
         search.value = formatDateBack(dataSelecionada.value)
     })
 
-    // Envio do form para pesquisa
+    // Envio da pesquisa
     const search = ref(form.pesquisa)
 
     watch([campo, search], ([campoValue]) => {
         if (!campoValue) {
             // Reenvia a rota sem filtros quando o campo ou é limpo
-            router.get(route('pessoas'), {}, {
+            router.get(route(props.routeName), {}, {
                 preserveState: true,
                 replace: true
             });
-
+            
             // Reinicia os valores do campo e da pesquisa
             campo.value = null
             search.value = ''
@@ -95,7 +93,7 @@
     });
 
     watch(search, throttle(function (value) {
-        router.get(route('pessoas'), { campo: form.campo?.toLowerCase(), pesquisa: value }, {
+        router.get(route(props.routeName), { campo: form.campo?.toLowerCase(), pesquisa: value }, {
             preserveState: true,
             replace: true
         })
@@ -106,7 +104,7 @@
     <v-form class="flex items-center">
         <v-select
             label="Filtrar por"
-            :items="buscaCampos"
+            :items="props.filtros"
             v-model="campo"
             class="w-32 mr-3"
             clearable
