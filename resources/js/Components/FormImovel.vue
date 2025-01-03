@@ -1,6 +1,8 @@
 <script setup>
     import NumberInput from '@/Components/NumberInput.vue'
+    import DecNumberInput from './DecNumberInput.vue'
     import { useForm } from '@inertiajs/vue3'
+    import { ref, watch } from 'vue'
 
     const props = defineProps({
         pessoas: Array,
@@ -26,6 +28,53 @@
         'Casa',
         'Apartamento'
     ]
+
+    // Formatação das areas
+    const formatAreaFront = (area) => {
+        if (area == null || area === null) return ''
+
+        return `${area} m²`
+    }
+
+    const formatAreaBack = (area) => {
+        return area?.replace(' m²', '').trim()
+    }
+
+    let terrenoFront = ref('')
+    let edificacaoFront = ref('')
+    let isEditing = ref(false)
+
+    terrenoFront.value = form.area_terreno
+    edificacaoFront.value = form.area_edificacao
+
+    // Observando o campo de entrada
+    watch(terrenoFront, (value) => {
+        form.area_terreno = formatAreaBack(value) // Mantém o valor do campo sincronizado no formato para o back
+    })
+
+    watch(edificacaoFront, (value) => {
+        form.area_edificacao = formatAreaBack(value)
+    })
+
+    // Caso tenha algum valor válido no campo, a unidade de medida é adicionada
+    const handleBlur = () => {
+        isEditing.value = false
+
+        if (terrenoFront.value !== 'm²' && terrenoFront.value !== '') {
+            terrenoFront.value = formatAreaFront(form.area_terreno) 
+        }
+
+        if (edificacaoFront.value !== 'm²' && edificacaoFront.value !== '') {
+            edificacaoFront.value = formatAreaFront(form.area_edificacao) 
+        }
+    }
+
+    // Enquanto está inserindo o valor, não mostra a unidade de medida
+    const handleFocus = () => {
+        isEditing.value = true
+        terrenoFront.value = formatAreaBack(terrenoFront.value)
+        edificacaoFront.value = formatAreaBack(form.area_edificacao)
+    }
 </script>
 
 <template>
@@ -99,8 +148,11 @@
                     cols="12"
                     md="4"
                 >
-                    <NumberInput 
+                    <DecNumberInput 
                         label="Área do Terreno" 
+                        v-model="terrenoFront"
+                        @focus="handleFocus" 
+                        @blur="handleBlur" 
                     />
                 </v-col>
 
@@ -109,8 +161,11 @@
                     cols="12"
                     md="4"
                 >
-                    <NumberInput 
+                    <DecNumberInput
                         label="Área da Edificação"
+                        v-model="edificacaoFront"
+                        @focus="handleFocus" 
+                        @blur="handleBlur" 
                     />
                 </v-col>
 
