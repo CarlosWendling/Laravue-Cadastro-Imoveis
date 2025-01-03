@@ -22,7 +22,7 @@
             <Filtro :filtros="props.filtros" :routeName="props.routeName" />
             
             <Btn class="ml-3">
-                <Link href="#">
+                <Link href="/imoveis/cadastro">
                     Cadastrar
                 </Link>
             </Btn>

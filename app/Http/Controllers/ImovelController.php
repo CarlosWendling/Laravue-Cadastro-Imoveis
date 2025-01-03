@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Imovel;
+use App\Models\Pessoa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 class ImovelController extends Controller
 {
-    function index () {
+    public function index () {
         $filtros = ['Inscrição Municipal', 
                     'Tipo', 
                     'Logradouro', 
@@ -24,5 +25,11 @@ class ImovelController extends Controller
         $imoveis = Imovel::all();
 
         return Inertia::render('Imoveis/Imoveis', ['imoveis' => $imoveis, 'filtros' => $filtros, 'routeName' => $routeName]);
+    }
+
+    public function create () {
+        $pessoas = Pessoa::all(['id', 'nome']);
+
+        return Inertia::render('Imoveis/CadastroImovel', ['pessoas' => $pessoas]);
     }
 }

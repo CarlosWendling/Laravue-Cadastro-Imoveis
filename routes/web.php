@@ -24,6 +24,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/pessoa/destroy/{id}', [PessoaController::class, 'destroy'])->name('pessoa.destroy');
 
     Route::get('/imoveis', [ImovelController::class, 'index'])->name('imoveis');
+    Route::get('/imoveis/cadastro', [ImovelController::class, 'create'])->name('imoveis.cadastro');
+
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
