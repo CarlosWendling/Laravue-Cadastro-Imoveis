@@ -6,21 +6,25 @@
 
     const props = defineProps({
         filtros: Array,
+        pessoas: Object,
         routeName: String
     })
+    
+    const form = useForm({
+        campo: "",
+        pesquisa: ""
+    })
 
+    // Filtros Pessoas
     const sexo = [
         'Masculino',
         'Feminino',
         'Outro',
     ]
 
-    const form = useForm({
-        campo: "",
-        pesquisa: ""
-    })
-
     let campo = ref(null)
+    const search = ref(form.pesquisa)
+
     watch(campo, value => {
         if (value == "Data de Nascimento") {
             form.campo = "data_nascimento"
@@ -75,12 +79,48 @@
         search.value = formatDateBack(dataSelecionada.value)
     })
 
-    // Envio da pesquisa
-    const search = ref(form.pesquisa)
+    // Filtros Imóveis
+    watch(campo, value => {
+        if (value == "Inscrição Municipal") {
+            form.campo = "inscricao_municipal"
+        } else if (value == "Número") {
+            form.campo = "numero"
+        } else if (value == "Situação") {
+            form.campo = "situacao"
+        } else if (value == "Contribuinte") {
+            form.campo = 'pessoa_id'
+        } else {
+            form.campo = campo.value
+        }
+    })
 
+    const tipo = [
+        'Terreno',
+        'Casa',
+        'Apartamento'
+    ]
+
+    const situacao = [
+        'Ativo',
+        'Inativo'
+    ]
+
+    const situacaoPesquisa = ref(null)
+    
+    watch(situacaoPesquisa, value => {
+        if (value == "Ativo") {
+            search.value = true
+        } else if (value == "Inativo") {
+            search.value = false
+        } else {
+            search.value = ''
+        }
+    })
+    
+    // Envio da pesquisa
     watch([campo, search], ([campoValue]) => {
         if (!campoValue) {
-            // Reenvia a rota sem filtros quando o campo ou é limpo
+            // Reenvia a rota sem filtros quando o campo é limpo
             router.get(route(props.routeName), {}, {
                 preserveState: true,
                 replace: true
@@ -110,6 +150,7 @@
             clearable
         />
 
+        <!-- Filtros Pessoas -->
         <v-text-field
             v-if="campo == 'Nome'"
             class="w-64"
@@ -161,6 +202,61 @@
                 Data de Nascimento
             </v-date-picker> 
         </v-menu>
+
+        <!-- Filtros Imóveis -->
+        <NumberInput 
+            v-if="campo == 'Inscrição Municipal'"
+            v-model="search"
+            class="w-64"
+            clearable
+        />
+
+        <v-select 
+            v-if="campo == 'Tipo'"
+                class="w-64"
+                v-model="search"
+                :items="tipo"
+                clearable
+        />
+
+        <v-text-field
+            v-if="campo == 'Logradouro'"
+            class="w-64"
+            v-model="search"
+            clearable
+        />
+
+        <NumberInput 
+            v-if="campo == 'Número'"
+            v-model="search"
+            class="w-64"
+            clearable
+        />
+
+        <v-text-field
+            v-if="campo == 'Bairro'"
+            class="w-64"
+            v-model="search"
+            clearable
+        />
+
+        <v-select 
+            v-if="campo == 'Contribuinte'"
+            class="w-64"
+            v-model="search"
+            :items="pessoas"
+            item-title="nome"
+            item-value="id"
+            clearable
+        />
+
+        <v-select 
+            v-if="campo == 'Situação'"
+            class="w-64"
+            v-model="situacaoPesquisa"
+            :items="situacao"
+            clearable
+        />
 
         <Btn type="submit" style="display: none" />
     </v-form>

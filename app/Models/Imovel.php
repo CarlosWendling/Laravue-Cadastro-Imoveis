@@ -23,4 +23,26 @@ class Imovel extends Model
     public function pessoa () {
         return $this->belongsTo(Pessoa::class);
     }
+
+    
+    public function scopeFilter ($query, array $filters) {
+
+        if (!empty($filters['campo']) && !empty($filters['pesquisa'])) {
+            $campo = $filters['campo'];
+            $pesquisa = $filters['pesquisa'];
+
+            if ($campo === 'situacao') {
+                // Comparando diretamente se o campo é true/false
+                if ($pesquisa === 'true') {
+                    $query->where('situacao', true);  // Ativo
+                } else if ($pesquisa === 'false') {
+                    $query->where('situacao', false);  // Inativo
+                }
+            } else {
+                $query->where($campo, 'like', "%{$pesquisa}%");
+            }
+        }
+
+        return $query;
+    }
 }

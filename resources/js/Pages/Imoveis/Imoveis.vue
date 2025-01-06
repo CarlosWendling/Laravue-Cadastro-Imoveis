@@ -4,6 +4,7 @@
 
     const props = defineProps ({
         imoveis: Object,
+        pessoas: Object,
         filtros: Array,
         routeName: String,
         errors: Object,
@@ -20,7 +21,11 @@
 
         <div class="flex items-center">
             
-            <Filtro :filtros="props.filtros" :routeName="props.routeName" />
+            <Filtro 
+                :filtros="props.filtros" 
+                :routeName="props.routeName" 
+                :pessoas="props.pessoas"
+            />
             
             <Btn class="ml-3">
                 <Link href="/imoveis/cadastro">
@@ -42,6 +47,7 @@
             </tr>
         </thead>
         <tbody>
+            <!-- CRIAR UM COMPONENTE PARA MENSAGENS DE NENHUM CADASTRO/PESQUISA NÃO ENCONTRADA -->
             <tr v-if="props.imoveis.length == 0">
                 <td>Nenhum imóvel cadastrado</td>
             </tr>

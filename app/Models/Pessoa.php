@@ -28,7 +28,6 @@ class Pessoa extends Model
             $query->where($campo, 'like', '%' . $pesquisa . '%');
         }
 
-        return $query;
-        
+        return $query; 
     }
 }
