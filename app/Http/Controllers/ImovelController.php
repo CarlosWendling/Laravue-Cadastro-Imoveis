@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreImovelRequest;
 use App\Models\Imovel;
 use App\Models\Pessoa;
 use Illuminate\Http\Request;
@@ -31,5 +32,16 @@ class ImovelController extends Controller
         $pessoas = Pessoa::all(['id', 'nome']);
 
         return Inertia::render('Imoveis/CadastroImovel', ['pessoas' => $pessoas]);
+    }
+
+    public function store (StoreImovelRequest $request) {
+        $data = $request->validated();
+
+        $data['pessoa_id'] = $data['contribuinte'];
+        unset($data['contribuinte']);
+
+        Imovel::create($data);
+
+        return redirect('/imoveis')->with('success_message', 'Imóvel cadastrado com sucesso');
     }
 }

@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/imoveis', [ImovelController::class, 'index'])->name('imoveis');
     Route::get('/imoveis/cadastro', [ImovelController::class, 'create'])->name('imoveis.cadastro');
+    Route::post('/imoveis/store', [ImovelController::class, 'store'])->name('imoveis.store');
 
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios');
 

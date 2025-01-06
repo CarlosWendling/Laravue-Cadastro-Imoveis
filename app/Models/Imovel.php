@@ -12,11 +12,11 @@ class Imovel extends Model
         'tipo',
         'area_terreno',
         'area_edificacao',
-        'logadouro',
+        'logradouro',
         'numero',
         'bairro',
         'complemento',
-        'contribuinte',
+        'pessoa_id',
         'situacao'
     ];
 

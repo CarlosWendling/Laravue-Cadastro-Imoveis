@@ -17,7 +17,8 @@
         contribuinte: null,
         area_terreno: null,
         area_edificacao: null,
-        tipo: null
+        tipo: null,
+        situacao: true
     }
 
     const form = useForm(data)
@@ -75,10 +76,19 @@
         terrenoFront.value = formatAreaBack(terrenoFront.value)
         edificacaoFront.value = formatAreaBack(form.area_edificacao)
     }
+
+    // Envio do formulário
+    const submit = () => {
+        if (props.textBtn == 'Atualizar') {
+
+        } else {
+            form.post('/imoveis/store', form)
+        }
+    }
 </script>
 
 <template>
-    <v-form>
+    <v-form @submit.prevent="submit">
         <v-container>
             <v-row class="pl-3 pt-6">
                 <h1 class="text-2xl">Cadastro Imóvel</h1>
@@ -91,6 +101,7 @@
                     <v-text-field 
                         label="Logradouro"
                         v-model="form.logradouro"
+                        :error-messages="form.errors.logradouro"
                         required
                     />
                 </v-col>
@@ -102,6 +113,7 @@
                     <v-text-field 
                         label="Bairro"
                         v-model="form.bairro"
+                        :error-messages="form.errors.bairro"
                         required
                     />
                 </v-col>
@@ -124,6 +136,7 @@
                     <NumberInput 
                         label="Número"
                         v-model="form.numero"
+                        :error-messages="form.errors.numero"
                         required
                     />
                 </v-col>
@@ -139,6 +152,7 @@
                     item-title="nome"
                     item-value="id"
                     clearable
+                    :error-messages="form.errors.contribuinte"
                     required
                     />
                 </v-col>
@@ -178,6 +192,7 @@
                         :items="tipo"
                         v-model="form.tipo"
                         clearable
+                        :error-messages="form.errors.tipo"
                         required
                     />
                 </v-col>
@@ -185,6 +200,7 @@
             <v-row class="pb-3 flex justify-end">
                 <Btn
                     type="submit"
+                    :disable="form.processing"
                 >
                     {{ props.textBtn }}
                 </Btn>
