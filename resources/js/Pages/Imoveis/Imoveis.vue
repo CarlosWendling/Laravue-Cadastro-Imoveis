@@ -1,5 +1,6 @@
 <script setup>
     import Filtro from '@/Components/Filtro.vue';
+    import Pagination from '@/Components/Pagination.vue'
 
     const props = defineProps ({
         imoveis: Object,
@@ -44,6 +45,37 @@
             <tr v-if="props.imoveis.length == 0">
                 <td>Nenhum imóvel cadastrado</td>
             </tr>
+            <tr 
+                v-for="imovel in props.imoveis.data" 
+                :key="imovel.inscricao_municipal"
+            >
+                <td>{{ imovel.inscricao_municipal }}</td>
+                <td>{{ imovel.tipo }}</td>
+                <td>{{ imovel.logradouro }}</td>
+                <td>{{ imovel.numero }}</td>
+                <td>{{ imovel.bairro }}</td>
+                <td>{{ imovel.pessoa?.nome }}</td>
+                <td class="flex items-center">
+                    <Btn
+                        variant="tonal"
+                        prepend-icon="mdi-pencil"
+                        class="mr-2"
+                    >
+                        Visualizar
+                    </Btn>
+                    <Btn
+                        variant="tonal"
+                        prepend-icon="mdi-delete"
+                    >
+                        Excluir
+                    </Btn>
+                </td>
+            </tr>
         </tbody>
     </v-table>
+
+    <Pagination 
+        :links="props.imoveis.links"
+        class="mt-6 pb-2"
+    />
 </template>

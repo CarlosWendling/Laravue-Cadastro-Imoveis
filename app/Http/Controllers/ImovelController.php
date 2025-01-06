@@ -23,9 +23,25 @@ class ImovelController extends Controller
 
         $routeName = Route::currentRouteName();
 
-        $imoveis = Imovel::all();
+        // Carregar imóveis com o contribuinte (pessoa associada)
+        $imoveis = Imovel::with('pessoa:id,nome')
+            ->paginate(10)
+            ->through(fn($imovel) => [
+                'inscricao_municipal' => $imovel->inscricao_municipal,
+                'tipo' => $imovel->tipo,
+                'logradouro' => $imovel->logradouro,
+                'numero' => $imovel->numero,
+                'bairro' => $imovel->bairro,
+                'pessoa' => $imovel->pessoa,
+                'situacao' => $imovel->situacao,
+            ]);
 
-        return Inertia::render('Imoveis/Imoveis', ['imoveis' => $imoveis, 'filtros' => $filtros, 'routeName' => $routeName]);
+        return Inertia::render('Imoveis/Imoveis', 
+            [
+                'imoveis' => $imoveis, 
+                'filtros' => $filtros, 
+                'routeName' => $routeName, 
+            ]);
     }
 
     public function create () {
