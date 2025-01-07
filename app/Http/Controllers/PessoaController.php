@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePessoaRequest;
+use App\Models\Imovel;
 use App\Models\Pessoa;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -60,8 +61,14 @@ class PessoaController extends Controller
     }
 
     public function destroy ($id) {
-        Pessoa::findOrFail($id)->delete();
+        $pessoa = Pessoa::findOrFail($id);
 
-        return redirect('/pessoas')->with('success_message', 'Pessoa excluída com sucesso');
+        if ($pessoa->imoveis->isEmpty()) {
+            $pessoa->delete();
+            return redirect('/pessoas')->with('success_message', 'Pessoa excluída com sucesso');
+        } else {
+            $pessoa->delete();
+            return redirect('/pessoas')->with('success_message', 'Pessoa e seus imóveis excluídos com sucesso');
+        }
     }
 }
