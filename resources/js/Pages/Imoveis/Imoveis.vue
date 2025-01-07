@@ -95,9 +95,8 @@
             </tr>
         </thead>
         <tbody>
-            <!-- CRIAR UM COMPONENTE PARA MENSAGENS DE NENHUM CADASTRO/PESQUISA NÃO ENCONTRADA -->
-            <tr v-if="props.imoveis.length == 0">
-                <td>Nenhum imóvel cadastrado</td>
+            <tr v-if="props.imoveis.data.length == 0">
+                <td>Nenhum imóvel encontrado</td>
             </tr>
             <tr 
                 v-for="imovel in props.imoveis.data" 

@@ -99,7 +99,7 @@
         </thead>
         <tbody>
             <tr v-if="props.pessoas.data.length == 0">
-                <td>Nenhuma pessoa cadastrada</td>
+                <td>Nenhuma pessoa encontrada</td>
             </tr>
             <tr 
                 v-for="pessoa in props.pessoas.data"
