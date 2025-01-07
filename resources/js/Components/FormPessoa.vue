@@ -142,7 +142,8 @@
     <v-form @submit.prevent="submit">
         <v-container>
             <v-row class="pl-3 pt-6">
-                <h1 class="text-2xl">Cadastro Pessoa</h1>
+                <h1 v-if="textBtn == 'Cadastrar'" class="text-2xl">Cadastro Pessoa</h1>
+                <h1 v-if="textBtn == 'Atualizar'" class="text-2xl">Atualizar Pessoa</h1>
             </v-row>
             <v-row>
                 <v-col

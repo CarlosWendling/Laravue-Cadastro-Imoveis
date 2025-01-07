@@ -22,10 +22,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/pessoa/{id}', [PessoaController::class, 'show'])->name('pessoa.show');
     Route::put('/pessoa/update/{id}', [PessoaController::class, 'update'])->name('pessoa.update');
     Route::delete('/pessoa/destroy/{id}', [PessoaController::class, 'destroy'])->name('pessoa.destroy');
-
+    
     Route::get('/imoveis', [ImovelController::class, 'index'])->name('imoveis');
     Route::get('/imoveis/cadastro', [ImovelController::class, 'create'])->name('imoveis.cadastro');
     Route::post('/imoveis/store', [ImovelController::class, 'store'])->name('imoveis.store');
+    Route::get('/imovel/{inscricao_municipal}', [ImovelController::class, 'show'])->name('imovel.show');
+    Route::put('/imovel/update/{inscricao_municipal}', [ImovelController::class, 'update'])->name('imovel.update');
 
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios');
 

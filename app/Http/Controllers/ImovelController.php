@@ -58,11 +58,33 @@ class ImovelController extends Controller
     public function store (StoreImovelRequest $request) {
         $data = $request->validated();
 
-        $data['pessoa_id'] = $data['contribuinte'];
-        unset($data['contribuinte']);
+        if ($request->has('contribuinte')) {
+            $data['pessoa_id'] = $request->input('contribuinte');
+        }
 
         Imovel::create($data);
 
         return redirect('/imoveis')->with('success_message', 'Imóvel cadastrado com sucesso');
+    }
+
+    public function show ($inscricao_municipal) {
+        $imovel = Imovel::findOrFail($inscricao_municipal);
+        $pessoas = Pessoa::all(['id', 'nome']);
+
+        return Inertia::render('Imoveis/VisualizarImovel', ['imovel' => $imovel, 'pessoas' => $pessoas]);
+    }
+
+    public function update (StoreImovelRequest $request, $inscricao_municipal) {
+        $data = Imovel::findOrFail($inscricao_municipal);
+
+        $dadosAtualizados = $request->except('situacao');
+        
+        if ($request->has('contribuinte')) {
+            $dadosAtualizados['pessoa_id'] = $request->input('contribuinte');
+        }
+
+        $data->update($dadosAtualizados);
+
+        return redirect('/imoveis')->with('success_message', 'Imóvel atualizado com sucesso');
     }
 }

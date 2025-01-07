@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Imovel extends Model
 {
     protected $table = 'imoveis';
+
+    protected $primaryKey = 'inscricao_municipal';
     
     protected $fillable = [
         'tipo',

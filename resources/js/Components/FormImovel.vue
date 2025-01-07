@@ -6,6 +6,7 @@
 
     const props = defineProps({
         pessoas: Array,
+        imovel: Object,
         textBtn: String
     })
 
@@ -19,6 +20,27 @@
         area_edificacao: null,
         tipo: null,
         situacao: true
+    }
+
+    if (props.imovel != null) {
+        data = {
+            inscricao_municipal: props.imovel.inscricao_municipal,
+            logradouro: props.imovel.logradouro,
+            bairro: props.imovel.bairro,
+            complemento: props.imovel.complemento,
+            numero: props.imovel.numero,
+            contribuinte: props.imovel.pessoa_id,
+            area_terreno: props.imovel.area_terreno,
+            area_edificacao: props.imovel.area_edificacao,
+            tipo: props.imovel.tipo,
+            situacao: props.imovel.situacao
+        }
+
+        if (data.situacao == '1') {
+            data.situacao = 'Ativo'
+        } else {
+            data.situacao = 'Inativo'
+        }
     }
 
     const form = useForm(data)
@@ -80,7 +102,7 @@
     // Envio do formulário
     const submit = () => {
         if (props.textBtn == 'Atualizar') {
-
+            form.put(route('imovel.update', form.inscricao_municipal))
         } else {
             form.post('/imoveis/store', form)
         }
@@ -91,7 +113,8 @@
     <v-form @submit.prevent="submit">
         <v-container>
             <v-row class="pl-3 pt-6">
-                <h1 class="text-2xl">Cadastro Imóvel</h1>
+                <h1 v-if="textBtn == 'Cadastrar'" class="text-2xl">Cadastro Imóvel</h1>
+                <h1 v-if="textBtn == 'Atualizar'" class="text-2xl">Atualizar Imóvel</h1>
             </v-row>
             <v-row>
                 <v-col
@@ -197,7 +220,22 @@
                     />
                 </v-col>
             </v-row>
-            <v-row class="pb-3 flex justify-end">
+            <v-row 
+                class="flex items-center justify-between"
+                :class="{'pb-3' : textBtn == 'Cadastrar'}"
+            >
+                <v-col
+                    cols="12"
+                    md="4"
+                >
+                    <v-select 
+                        v-if="textBtn == 'Atualizar'"
+                        label="Situação"
+                        v-model="form.situacao"
+                        disabled
+                    />
+                </v-col>
+
                 <Btn
                     type="submit"
                     :disable="form.processing"

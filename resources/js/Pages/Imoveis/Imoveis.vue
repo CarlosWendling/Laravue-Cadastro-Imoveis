@@ -67,7 +67,11 @@
                         prepend-icon="mdi-pencil"
                         class="mr-2"
                     >
-                        Visualizar
+                        <Link
+                            :href="route('imovel.show', imovel.inscricao_municipal)"
+                        >
+                            Visualizar
+                        </Link>
                     </Btn>
                     <Btn
                         variant="tonal"
