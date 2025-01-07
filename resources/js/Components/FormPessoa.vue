@@ -130,9 +130,9 @@
     // Envio do Form
     const submit = () => {
         if (props.textBtn == 'Atualizar') {
-            form.put(route('pessoa.update', data.id))
+            form.put(route('pessoa.update', form.id))
         } else {
-            form.post('/pessoas/store', data)
+            form.post('/pessoas/store', form)
         }
     }
 
