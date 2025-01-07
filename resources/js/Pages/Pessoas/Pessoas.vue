@@ -30,7 +30,8 @@
 
     let pessoaExcluir = {
         id: null,
-        nome: null
+        nome: null,
+        cpf: null
     }
 
     const excluir = (id) => {
@@ -52,9 +53,8 @@
             attach="body"
         >
             <v-card class="pt-2 pb-1 px-3">
-                <div class="flex justify-center">
-                    <v-card-title>Deseja excluir a pessoa: {{ pessoaExcluir.nome }}?</v-card-title>
-                </div>
+                <v-card-title>Deseja excluir a pessoa: {{ pessoaExcluir.nome }}?</v-card-title>
+                <v-card-subtitle>Cpf: {{ formatCpfFront(pessoaExcluir.cpf) }}?</v-card-subtitle>
 
                 <v-card-actions>
                     <Btn
@@ -123,7 +123,10 @@
                     <Btn
                         variant="tonal"
                         prepend-icon="mdi-delete"
-                        @click="isDialogOpen = true; pessoaExcluir.id = pessoa.id; pessoaExcluir.nome = pessoa.nome"
+                        @click="isDialogOpen = true; 
+                                pessoaExcluir.id = pessoa.id; 
+                                pessoaExcluir.nome = pessoa.nome
+                                pessoaExcluir.cpf = pessoa.cpf"
                     >
                         Excluir
                     </Btn>
