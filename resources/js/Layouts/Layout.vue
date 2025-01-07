@@ -17,6 +17,7 @@
                     type: 'success'
                 })
             }
+            page.props.flash.success_message = null;
         })
 </script>
 
