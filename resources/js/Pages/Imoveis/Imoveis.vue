@@ -1,6 +1,8 @@
 <script setup>
     import Filtro from '@/Components/Filtro.vue';
     import Pagination from '@/Components/Pagination.vue'
+    import { ref } from 'vue';
+    import { router } from '@inertiajs/vue3'
 
     const props = defineProps ({
         imoveis: Object,
@@ -11,6 +13,25 @@
         auth: Object,
         flash: Object
     })
+
+    const isDialogOpen = ref(false)
+
+    const formatCpfFront = (cpf) => {
+        cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+        return cpf
+    }
+
+    let imovelExcluir = {
+        inscricao_municipal: null,
+        contribuinte: null,
+        cpfContribuinte: null,
+        logradouro: null
+    }
+
+    const excluir = (inscricao_municipal) => {
+        router.delete(`/imovel/destroy/${inscricao_municipal}`)
+        isDialogOpen.value = false
+    }
 </script>
 
 <template>
@@ -18,6 +39,33 @@
 
     <div class="flex justify-between py-5 border-b-2 items-center">
         <h1 class="text-2xl">Imóveis</h1>
+
+        <v-dialog
+            v-model="isDialogOpen"
+            width="500px"
+            attach="body"
+        >
+            <v-card class="pt-2 pb-1 px-3">
+                <v-card-title>Deseja excluir o imóvel: {{ imovelExcluir.logradouro }}?</v-card-title>
+                <v-card-subtitle>Contribuinte: {{ imovelExcluir.contribuinte }}</v-card-subtitle>
+                <v-card-subtitle>Cpf do contribuinte: {{ formatCpfFront(imovelExcluir.cpfContribuinte) }}</v-card-subtitle>
+                <v-card-actions>
+                    <Btn
+                        @click="isDialogOpen = false"
+                        variant="tonal"
+                    >
+                        Cancelar
+                    </Btn>
+
+                    <Btn
+                        @click="excluir(imovelExcluir.inscricao_municipal)"
+                        variant="flat"
+                    >
+                        Excluir
+                    </Btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
 
         <div class="flex items-center">
             
@@ -76,6 +124,11 @@
                     <Btn
                         variant="tonal"
                         prepend-icon="mdi-delete"
+                        @click="isDialogOpen = true; 
+                                imovelExcluir.inscricao_municipal = imovel.inscricao_municipal; 
+                                imovelExcluir.contribuinte = imovel.pessoa?.nome;
+                                imovelExcluir.cpfContribuinte = imovel.pessoa?.cpf;
+                                imovelExcluir.logradouro = imovel.logradouro"
                     >
                         Excluir
                     </Btn>

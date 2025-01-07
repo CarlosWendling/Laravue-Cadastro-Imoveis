@@ -26,7 +26,7 @@ class ImovelController extends Controller
         $pessoas = Pessoa::select('id', 'nome')->get();
 
         // Carregar imóveis com o contribuinte (pessoa associada)
-        $imoveis = Imovel::with('pessoa:id,nome')
+        $imoveis = Imovel::with('pessoa:id,nome,cpf')
             ->filter(request(['campo', 'pesquisa']))
             ->paginate(10)
             ->through(fn($imovel) => [
@@ -35,7 +35,10 @@ class ImovelController extends Controller
                 'logradouro' => $imovel->logradouro,
                 'numero' => $imovel->numero,
                 'bairro' => $imovel->bairro,
-                'pessoa' => $imovel->pessoa,
+                'pessoa' => $imovel->pessoa ? [
+                    'nome' => $imovel->pessoa->nome,
+                    'cpf' => $imovel->pessoa->cpf,
+                ] : null,
                 'situacao' => $imovel->situacao,
             ])
             ->withQueryString();;
@@ -86,5 +89,11 @@ class ImovelController extends Controller
         $data->update($dadosAtualizados);
 
         return redirect('/imoveis')->with('success_message', 'Imóvel atualizado com sucesso');
+    }
+
+    public function destroy ($inscricao_municipal) {
+        Imovel::findOrFail($inscricao_municipal)->delete();
+
+        return redirect('/imoveis')->with('success_message', 'Imóvel deletado com sucesso');
     }
 }
