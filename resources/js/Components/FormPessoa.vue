@@ -1,7 +1,7 @@
 <script setup>
     import { ref, watch } from 'vue';
-    import { useForm } from '@inertiajs/vue3'
-    import NumberInput from './NumberInput.vue';
+    import NumberInput from './NumberInput.vue'
+    import { useForm } from 'laravel-precognition-vue-inertia';
 
     let data = {
         nome: null,
@@ -14,6 +14,8 @@
 
     const props = defineProps ({
         pessoa: Object,
+        method: String,
+        route: String,
         textBtn: String
     })
 
@@ -29,7 +31,7 @@
         }
     }
 
-    const form = useForm(data)
+    const form = useForm(props.method, props.route, data)
 
     // Date Picker
     const dataSelecionada = ref()
@@ -130,9 +132,9 @@
     // Envio do Form
     const submit = () => {
         if (props.textBtn == 'Atualizar') {
-            form.put(route('pessoa.update', form.id))
+            form.submit(form.id)
         } else {
-            form.post('/pessoas/store', form)
+            form.submit(form)
         }
     }
 
@@ -154,6 +156,7 @@
                         v-model="form.nome"
                         label="Nome Completo"
                         required
+                        @change="form.validate('nome')"
                         :error-messages="form.errors.nome"
                     />
                 </v-col>
@@ -169,6 +172,7 @@
                         maxlength="14"
                         required
                         :disabled="props.textBtn == 'Atualizar'"
+                        @change="form.validate('cpf')"
                         :error-messages="form.errors.cpf"
                     />
                 </v-col>
@@ -182,6 +186,7 @@
                     <v-text-field 
                         v-model="form.email"
                         label="Email"
+                        @change="form.validate('email')"
                         :error-messages="form.errors.email"
                     />
                 </v-col>
@@ -202,6 +207,7 @@
                                 v-bind="props"
                                 :model-value="dataFront"
                                 required
+                                @change="form.validate('data_nascimento')"
                                 :error-messages="form.errors.data_nascimento"
                             />
                         </template>
@@ -212,6 +218,7 @@
                             header="Data de Nasc"
                             v-model="dataSelecionada"
                             hide-weekdays
+                            @change="form.validate('data_nascimento')"
                             :max="new Date()"
                         >
                             Data de Nascimento
@@ -225,6 +232,7 @@
                         :items="items"
                         v-model="form.sexo"
                         required
+                        @change="form.validate('sexo')"
                         :error-messages="form.errors.sexo"
                     />
                 </v-col>
@@ -241,6 +249,7 @@
                         maxlength="15"
                         @keydown="telDinamico"
                         v-model="telFront"
+                        @change="form.validate('telefone')"
                         :error-messages="form.errors.telefone"
                     />
                 </v-col>

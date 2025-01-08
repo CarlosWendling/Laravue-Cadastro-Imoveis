@@ -49,9 +49,9 @@ class PessoaController extends Controller
         return Inertia::render('Pessoas/VisualizarPessoa', ['pessoa' => $pessoa]);
     }
 
-    public function update ($id, StorePessoaRequest $request) {
+    public function update (StorePessoaRequest $request) {
 
-        $pessoa = Pessoa::findOrFail($id);
+        $pessoa = Pessoa::findOrFail($request->id);
 
         $dadosAtualizados = $request->except('cpf');
 

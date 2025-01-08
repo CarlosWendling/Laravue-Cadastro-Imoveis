@@ -5,5 +5,9 @@
 <template>
     <Head title="Cadastro Pessoa" />
 
-    <FormPessoa textBtn="Cadastrar" />
+    <FormPessoa 
+        textBtn="Cadastrar" 
+        method="post" 
+        route="/pessoas/store" 
+    />
 </template>

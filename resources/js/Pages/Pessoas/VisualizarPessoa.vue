@@ -10,6 +10,11 @@
 
     <Head :title="`Editar ${props.pessoa.nome}`" />
 
-    <FormPessoa :pessoa="props.pessoa" textBtn="Atualizar" />
+    <FormPessoa 
+        :pessoa="props.pessoa" 
+        textBtn="Atualizar" 
+        method="put" 
+        route="/pessoa/update"
+    />
 
 </template>

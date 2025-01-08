@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Pessoa;
+use App\Rules\ValidacaoCpf;
+use App\Rules\ValidacaoIdade;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePessoaRequest extends FormRequest
 {
@@ -24,20 +28,12 @@ class StorePessoaRequest extends FormRequest
 
         $rules = [
             'nome' => 'required|min:6',
-            'cpf' => 'required|unique:pessoas|min:11|max:11',
-            'data_nascimento' => 'required',
+            'data_nascimento' => ['required', new ValidacaoIdade()],
             'sexo' => 'required',
-            'email' => 'nullable|email',
+            'cpf' => ['required', Rule::unique(Pessoa::class)->ignore($this->id), new ValidacaoCpf()],
+            'email' => ['nullable', 'email', Rule::unique(Pessoa::class)->ignore($this->id)],
             'telefone' => 'nullable|min:11|max:11'
         ];
-
-        if ($this->isMethod('post')) {
-            $rules['cpf'] = 'required|unique:pessoas|min:11|max:11';
-        }
-
-        if ($this->isMethod('put')) {
-            $rules['cpf'] = 'required|min:11|max:11';
-        }
 
         return $rules;
     }
@@ -49,10 +45,10 @@ class StorePessoaRequest extends FormRequest
             'nome.min' => 'Preencha com o seu nome completo',
             'cpf.unique' => 'CPF já cadastrado',
             'cpf.required' => 'O campo CPF é obrigatório',
-            'cpf.min' => 'CPF inválido',
             'data_nascimento.required' => 'O campo da data de nascimento é obrigatório',
             'sexo.required' => 'O campo do sexo é obrigatório',
             'email.email' => 'Email inválido',
+            'email.unique' => 'Email já cadastrado',
             'telefone.min' => 'Telefone incompleto'
         ];
     }
