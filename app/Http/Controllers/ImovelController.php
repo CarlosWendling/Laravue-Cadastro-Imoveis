@@ -77,8 +77,8 @@ class ImovelController extends Controller
         return Inertia::render('Imoveis/VisualizarImovel', ['imovel' => $imovel, 'pessoas' => $pessoas]);
     }
 
-    public function update (StoreImovelRequest $request, $inscricao_municipal) {
-        $data = Imovel::findOrFail($inscricao_municipal);
+    public function update (StoreImovelRequest $request) {
+        $data = Imovel::findOrFail($request->inscricao_municipal);
 
         $dadosAtualizados = $request->except('situacao');
         

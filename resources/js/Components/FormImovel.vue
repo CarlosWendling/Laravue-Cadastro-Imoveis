@@ -1,12 +1,14 @@
 <script setup>
     import NumberInput from '@/Components/NumberInput.vue'
     import DecNumberInput from './DecNumberInput.vue'
-    import { useForm } from '@inertiajs/vue3'
+    import { useForm } from 'laravel-precognition-vue-inertia'
     import { ref, watch } from 'vue'
 
     const props = defineProps({
         pessoas: Array,
         imovel: Object,
+        method: String,
+        route: String,
         textBtn: String
     })
 
@@ -43,23 +45,30 @@
         }
     }
 
-    const form = useForm(data)
+    const form = useForm(props.method, props.route, data)
 
     // Tipo
-    const tipo = [
+    const tipos = [
         'Terreno',
         'Casa',
         'Apartamento'
     ]
+    const tipo = ref(form.tipo)
+
+    watch(tipo, value => {
+        form.tipo = tipo.value
+    })    
 
     // Formatação das areas
     const formatAreaFront = (area) => {
-        if (area == null || area === null) return ''
+        if (area == null) return ''
 
         return `${area} m²`
     }
 
     const formatAreaBack = (area) => {
+        if (typeof area !== 'string') return area
+
         return area?.replace(' m²', '').trim()
     }
 
@@ -67,8 +76,8 @@
     let edificacaoFront = ref('')
     let isEditing = ref(false)
 
-    terrenoFront.value = form.area_terreno
-    edificacaoFront.value = form.area_edificacao
+    terrenoFront.value = formatAreaFront(form.area_terreno)
+    edificacaoFront.value = formatAreaFront(form.area_edificacao)
 
     // Observando o campo de entrada
     watch(terrenoFront, (value) => {
@@ -99,12 +108,24 @@
         edificacaoFront.value = formatAreaBack(form.area_edificacao)
     }
 
+    const handleBlurTipo = () => {
+        if (tipo.value == 'Terreno') {
+            edificacaoFront.value = '0 m²'
+            form.area_edificacao = formatAreaBack(edificacaoFront.value)
+        }
+
+        if (tipo.value == 'Apartamento') {
+            terrenoFront.value = '0 m²'
+            form.area_terreno = formatAreaBack(edificacaoFront.value)
+        }
+    }
+
     // Envio do formulário
     const submit = () => {
         if (props.textBtn == 'Atualizar') {
-            form.put(route('imovel.update', form.inscricao_municipal))
+            form.submit(form.inscricao_municipal)
         } else {
-            form.post('/imoveis/store', form)
+            form.submit(form)
         }
     }
 </script>
@@ -124,6 +145,7 @@
                     <v-text-field 
                         label="Logradouro"
                         v-model="form.logradouro"
+                        @change="form.validate('logradouro')"
                         :error-messages="form.errors.logradouro"
                         required
                     />
@@ -136,6 +158,7 @@
                     <v-text-field 
                         label="Bairro"
                         v-model="form.bairro"
+                        @change="form.validate('bairro')"
                         :error-messages="form.errors.bairro"
                         required
                     />
@@ -148,6 +171,7 @@
                 >
                     <v-text-field 
                         label="Complemento"
+                        @change="form.validate('complemento')"
                         v-model="form.complemento"
                     />
                 </v-col>
@@ -159,6 +183,7 @@
                     <NumberInput 
                         label="Número"
                         v-model="form.numero"
+                        @change="form.validate('numero')"
                         :error-messages="form.errors.numero"
                         required
                     />
@@ -175,6 +200,7 @@
                     item-title="nome"
                     item-value="id"
                     clearable
+                    @change="form.validate('contribuinte')"
                     :error-messages="form.errors.contribuinte"
                     required
                     />
@@ -187,9 +213,12 @@
                 >
                     <DecNumberInput 
                         label="Área do Terreno" 
+                        :disabled="tipo == 'Apartamento'"
                         v-model="terrenoFront"
                         @focus="handleFocus" 
-                        @blur="handleBlur" 
+                        @blur="handleBlur"
+                        @change="form.validate('area_terreno')"
+                        :error-messages="form.errors.area_terreno"
                     />
                 </v-col>
 
@@ -200,9 +229,12 @@
                 >
                     <DecNumberInput
                         label="Área da Edificação"
+                        :disabled="tipo == 'Terreno'"
                         v-model="edificacaoFront"
                         @focus="handleFocus" 
                         @blur="handleBlur" 
+                        @change="form.validate('area_edificacao')"
+                        :error-messages="form.errors.area_edificacao"
                     />
                 </v-col>
 
@@ -212,9 +244,11 @@
                 >
                     <v-select 
                         label="Tipo"
-                        :items="tipo"
-                        v-model="form.tipo"
+                        :items="tipos"
+                        v-model="tipo"
                         clearable
+                        @blur="handleBlurTipo"
+                        @change="form.validate('tipo')"
                         :error-messages="form.errors.tipo"
                         required
                     />

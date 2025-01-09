@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('imoveis', function (Blueprint $table) {
             $table->id('inscricao_municipal');
             $table->string('tipo', 100);
-            $table->integer('area_terreno')->nullable();
-            $table->integer('area_edificacao')->nullable();
+            $table->double('area_terreno')->nullable();
+            $table->double('area_edificacao')->nullable();
             $table->string('logadouro', 100);
             $table->integer('numero');
             $table->string('bairro', 100);

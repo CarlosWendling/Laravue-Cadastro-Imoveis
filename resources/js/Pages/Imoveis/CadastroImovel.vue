@@ -9,5 +9,10 @@
 <template>
     <Head title="Cadastro Imóvel" />
 
-    <FormImovel textBtn="Cadastrar" :pessoas="props.pessoas" />
+    <FormImovel 
+        textBtn="Cadastrar" 
+        :pessoas="props.pessoas" 
+        method="post" 
+        route="/imoveis/store" 
+    />
 </template>

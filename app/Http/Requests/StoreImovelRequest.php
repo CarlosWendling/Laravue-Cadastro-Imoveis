@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreImovelRequest extends FormRequest
 {
@@ -27,11 +28,24 @@ class StoreImovelRequest extends FormRequest
             'complemento' => 'nullable',
             'numero' => 'required',
             'contribuinte' => 'required',
-            'area_terreno' => 'nullable',
-            'area_edificacao' => 'nullable',
             'tipo' => 'required',
             'situacao' => 'required'
         ];
+
+        if ($this->input('tipo') == 'Terreno') {
+            $rules['area_terreno'] = 'required|numeric|min:1';
+            $rules['area_edificacao'] = 'required|numeric|min:0';
+        }
+
+        if ($this->input('tipo') == 'Casa') {
+            $rules['area_terreno'] = 'required|numeric|min:1';
+            $rules['area_edificacao'] = 'required|numeric|min:1';
+        }
+
+        if ($this->input('tipo') == 'Apartamento') {
+            $rules['area_terreno'] = 'required|numeric|min:0';
+            $rules['area_edificacao'] = 'required|numeric|min:1';
+        }
 
         return $rules;
     }
@@ -45,6 +59,10 @@ class StoreImovelRequest extends FormRequest
             'bairro.min' => 'Preencha com um bairro válido',
             'numero.required' => 'O campo do numero é obrigatório',
             'contribuinte.required' => 'Selecione um contribuinte',
+            'area_terreno.required' => 'A área do terreno é obrigatória',
+            'area_terreno.min' => 'A área do terreno não pode ser zero',
+            'area_edificacao.required' => 'A área da edificação é obrigatória',
+            'area_edificacao.min' => 'A área da edificação não pode ser zero',
             'tipo.required' => 'Selecione o tipo da propriedade'
         ];
     }

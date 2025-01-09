@@ -11,6 +11,12 @@
 
     <Head :title="`Editar ${props.imovel.logradouro}`" />
 
-    <FormImovel :imovel="props.imovel" :pessoas="props.pessoas" textBtn="Atualizar" />
+    <FormImovel 
+        :imovel="props.imovel" 
+        :pessoas="props.pessoas" 
+        textBtn="Atualizar" 
+        method="put" 
+        route="/imovel/update"
+    />
 
 </template>

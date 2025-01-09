@@ -23,8 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('pessoas', function (Blueprint $table) {
-            $table->string('email', 150)->nullable()->unique()->change();
-            $table->string('cpf', 11)->unique()->change();
+            $table->string('email', 150)->nullable()->change();
+            $table->string('cpf', 11)->change();
         });
     }
 };

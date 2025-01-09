@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
         ->middleware([HandlePrecognitiveRequests::class])
         ->name('imoveis.store');
     Route::get('/imovel/{inscricao_municipal}', [ImovelController::class, 'show'])->name('imovel.show');
-    Route::put('/imovel/update/{inscricao_municipal}', [ImovelController::class, 'update'])
+    Route::put('/imovel/update', [ImovelController::class, 'update'])
         ->middleware([HandlePrecognitiveRequests::class])
         ->name('imovel.update');
     Route::delete('imovel/destroy/{inscricao_municipal}', [ImovelController::class, 'destroy'])->name('imovel.destroy');
