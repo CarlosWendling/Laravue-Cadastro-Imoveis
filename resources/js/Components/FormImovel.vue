@@ -3,10 +3,12 @@
     import DecNumberInput from './DecNumberInput.vue'
     import { useForm } from 'laravel-precognition-vue-inertia'
     import { ref, watch } from 'vue'
+    import { router } from '@inertiajs/vue3'
 
     const props = defineProps({
-        pessoas: Array,
         imovel: Object,
+        pessoas: Array,
+        arquivos: Array,
         method: String,
         route: String,
         textBtn: String
@@ -21,12 +23,13 @@
         area_terreno: null,
         area_edificacao: null,
         tipo: null,
+        files: null,
         situacao: true
     }
 
     if (props.imovel != null) {
         data = {
-            inscricao_municipal: props.imovel.inscricao_municipal,
+            inscricao_municipal: props.imovel[0]?.inscricao_municipal,
             logradouro: props.imovel.logradouro,
             bairro: props.imovel.bairro,
             complemento: props.imovel.complemento,
@@ -35,6 +38,7 @@
             area_terreno: props.imovel.area_terreno,
             area_edificacao: props.imovel.area_edificacao,
             tipo: props.imovel.tipo,
+            files: null,
             situacao: props.imovel.situacao
         }
 
@@ -120,6 +124,36 @@
         }
     }
 
+    // Inserção de arquivos
+    const isDialogOpen = ref(false)
+    const maxFiles = 5
+
+    const maxFilesRule = (value) => {
+        
+        if (form.files?.length > maxFiles) {
+            return `Anexar no máximo ${maxFiles} documentos`
+        }
+
+        return true
+    }
+
+    const maxSizeRule = (value) => {
+        const maxSize = 3 * 1024 * 1024; // 3MB
+
+        if (value && value.length > 0) {
+            // Adicionar em uma lista os arquivos que excedem o tamanho permitido
+            const oversizedFiles = value.filter((file) => file.size > maxSize)
+
+            if (oversizedFiles.length > 0) {
+                // Percorre a lista com o map e extrai o nome, adicionando em uma string
+                const oversizedFileNames = oversizedFiles.map((file) => file.name).join(', ')
+                return `Os seguintes arquivos excedes o tamanho máximo de 3MB: ${oversizedFileNames}`
+            }
+        }
+
+        return true
+    }
+
     // Envio do formulário
     const submit = () => {
         if (props.textBtn == 'Atualizar') {
@@ -131,11 +165,67 @@
 </script>
 
 <template>
-    <v-form @submit.prevent="submit">
+    <v-form enctype="multipart/form-data" @submit.prevent="submit">
         <v-container>
-            <v-row class="pl-3 pt-6">
-                <h1 v-if="textBtn == 'Cadastrar'" class="text-2xl">Cadastro Imóvel</h1>
-                <h1 v-if="textBtn == 'Atualizar'" class="text-2xl">Atualizar Imóvel</h1>
+            <v-row class="pt-6 mb-1 flex items-center justify-between">
+                <v-col
+                    cols="12"
+                    md="3"
+                >
+                    <h1 v-if="textBtn == 'Cadastrar'" class="text-2xl">Cadastro Imóvel</h1>
+                    <h1 v-if="textBtn == 'Atualizar'" class="text-2xl">Atualizar Imóvel</h1>
+                </v-col>
+
+                <v-dialog
+                    v-model="isDialogOpen"
+                    width="500px"
+                    attach="body"
+                >
+                    <v-card class="pt-2 pb-1 px-3">
+                        <v-card-title>Adicione arquivos (max: 5)</v-card-title>
+
+                        <v-file-input
+                            label="Anexar Documento"
+                            v-model="form.files"
+                            name="files"
+                            accept=".jpg, .jpeg, .png, .pdf"
+                            density="compact"
+                            counter
+                            chips
+                            multiple
+                            @change="form.validateFiles()"
+                            :rules="[maxFilesRule, maxSizeRule]"
+                        />
+                    
+                        
+                        <v-card-actions>
+                            <Btn
+                                @click="isDialogOpen = false"
+                                variant="tonal"
+                            >
+                                Fechar
+                            </Btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+
+                <div class="">
+                    <Btn
+                        @click="isDialogOpen = true"
+                        variant="tonal"
+                    >
+                        Adicionar arquivos
+                    </Btn>
+
+                    <p
+                        v-if="form.files != null"
+                        class="text-xs mt-1"
+                        :class="{'text-red-600' : form.files?.length > maxFiles}"
+                    >
+                        Quantidade de arquivos: {{ form.files?.length }}
+                    </p>
+                    
+                </div>
             </v-row>
             <v-row>
                 <v-col

@@ -29,6 +29,8 @@ class StoreImovelRequest extends FormRequest
             'numero' => 'required',
             'contribuinte' => 'required',
             'tipo' => 'required',
+            'files.*' => ['file', 'max:3072', 'mimes:jpg,jpeg,png,pdf'],
+            'files' => ['nullable', 'array', 'max:5'],
             'situacao' => 'required'
         ];
 

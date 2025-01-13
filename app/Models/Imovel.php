@@ -25,7 +25,10 @@ class Imovel extends Model
     public function pessoa () {
         return $this->belongsTo(Pessoa::class);
     }
-
+    
+    public function arquivos () {
+        return $this->hasMany(Arquivo::class);
+    }
     
     public function scopeFilter ($query, array $filters) {
 
