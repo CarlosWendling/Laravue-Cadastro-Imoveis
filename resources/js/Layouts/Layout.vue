@@ -19,6 +19,18 @@
             }
             page.props.flash.success_message = null;
         })
+
+        watch(
+        () =>  page.props.flash.error_message,
+        (newMessage) => {
+            if (newMessage) {
+                toast(`${newMessage}`, {
+                    autoClose: 3000,
+                    type: 'error'
+                })
+            }
+            page.props.flash.error_message = null;
+        })
 </script>
 
 <template>

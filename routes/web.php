@@ -40,6 +40,12 @@ Route::middleware('auth')->group(function () {
         ->name('imovel.update');
     Route::delete('imovel/destroy/{inscricao_municipal}', [ImovelController::class, 'destroy'])->name('imovel.destroy');
 
+    // Arquivos
+    Route::post('/arquivos/store', [ImovelController::class, 'arquivosStore'])
+        ->middleware([HandlePrecognitiveRequests::class])
+        ->name('arquivos.store');
+    Route::delete('/arquivos/destroy/{id}', [ImovelController::class, 'arquivosDestroy'])->name('arquivos.destoy');
+
 
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios');
 

@@ -2,8 +2,9 @@
     import NumberInput from '@/Components/NumberInput.vue'
     import DecNumberInput from './DecNumberInput.vue'
     import { useForm } from 'laravel-precognition-vue-inertia'
-    import { ref, watch } from 'vue'
+    import { ref, watch, computed } from 'vue'
     import { router } from '@inertiajs/vue3'
+    import MensagesArquivos from './MensagesArquivos.vue'
 
     const props = defineProps({
         imovel: Object,
@@ -23,13 +24,12 @@
         area_terreno: null,
         area_edificacao: null,
         tipo: null,
-        files: null,
         situacao: true
     }
 
     if (props.imovel != null) {
         data = {
-            inscricao_municipal: props.imovel[0]?.inscricao_municipal,
+            inscricao_municipal: props.imovel.inscricao_municipal,
             logradouro: props.imovel.logradouro,
             bairro: props.imovel.bairro,
             complemento: props.imovel.complemento,
@@ -38,7 +38,6 @@
             area_terreno: props.imovel.area_terreno,
             area_edificacao: props.imovel.area_edificacao,
             tipo: props.imovel.tipo,
-            files: null,
             situacao: props.imovel.situacao
         }
 
@@ -49,7 +48,20 @@
         }
     }
 
+    let arquivos = {
+        inscricao_municipal_imovel: null,
+        files: null
+    }
+
+    if (props.arquivos != null) {
+        arquivos = {
+            inscricao_municipal_imovel: props.imovel.inscricao_municipal,
+            files: props.arquivos.files
+        }
+    }
+    
     const form = useForm(props.method, props.route, data)
+    const formArquivos = useForm('post', route('arquivos.store'), arquivos)
 
     // Tipo
     const tipos = [
@@ -126,11 +138,17 @@
 
     // Inserção de arquivos
     const isDialogOpen = ref(false)
+    const dialogExcluir = ref(false)
     const maxFiles = 5
+    const maxSize = 3 * 1024 * 1024; // 3MB
+    
+    const countFiles = computed(() => {
+        return (formArquivos.files?.length || 0) + (props.arquivos?.length || 0);
+    });
 
-    const maxFilesRule = (value) => {
+    const maxFilesRule = () => {
         
-        if (form.files?.length > maxFiles) {
+        if (countFiles.value > maxFiles) {
             return `Anexar no máximo ${maxFiles} documentos`
         }
 
@@ -138,8 +156,6 @@
     }
 
     const maxSizeRule = (value) => {
-        const maxSize = 3 * 1024 * 1024; // 3MB
-
         if (value && value.length > 0) {
             // Adicionar em uma lista os arquivos que excedem o tamanho permitido
             const oversizedFiles = value.filter((file) => file.size > maxSize)
@@ -154,12 +170,33 @@
         return true
     }
 
+    const submitArquivos = () => {
+        isDialogOpen.value = false
+        formArquivos.submit(formArquivos)
+    }
+
+    let arquivoExcluir = {
+        id: null,
+        nome: null,
+    }
+
+    const excluirArquivos = (id) => {
+        router.delete(`/arquivos/destroy/${id}`)
+        dialogExcluir.value = false
+    }
+
     // Envio do formulário
     const submit = () => {
         if (props.textBtn == 'Atualizar') {
             form.submit(form.inscricao_municipal)
         } else {
-            form.submit(form)
+            const combinedData = {
+                ...form.data(),
+                files: formArquivos.files
+            }
+
+            const combinedDataForm = useForm('post', route('imoveis.store'), combinedData)
+            combinedDataForm.submit(combinedDataForm)
         }
     }
 </script>
@@ -177,55 +214,120 @@
                 </v-col>
 
                 <v-dialog
-                    v-model="isDialogOpen"
-                    width="500px"
+                    v-model="dialogExcluir"
+                    width="600px"
                     attach="body"
                 >
                     <v-card class="pt-2 pb-1 px-3">
-                        <v-card-title>Adicione arquivos (max: 5)</v-card-title>
+                        <v-card-title>Deseja excluir o arquivo: {{ arquivoExcluir.nome }} ?</v-card-title>
 
-                        <v-file-input
-                            label="Anexar Documento"
-                            v-model="form.files"
-                            name="files"
-                            accept=".jpg, .jpeg, .png, .pdf"
-                            density="compact"
-                            counter
-                            chips
-                            multiple
-                            @change="form.validateFiles()"
-                            :rules="[maxFilesRule, maxSizeRule]"
-                        />
-                    
-                        
                         <v-card-actions>
                             <Btn
-                                @click="isDialogOpen = false"
-                                variant="tonal"
-                            >
-                                Fechar
-                            </Btn>
+                                    variant="flat"
+                                    @click="excluirArquivos(arquivoExcluir.id)"
+                                >
+                                    Excluir
+                                </Btn>
+
+                                <Btn
+                                    @click="dialogExcluir = false"
+                                    variant="tonal"
+                                >
+                                    Fechar
+                                </Btn>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
 
-                <div class="">
+                <v-dialog
+                    v-model="isDialogOpen"
+                    width="600px"
+                    attach="body"
+                >
+                    <v-card class="pt-2 pb-1 px-3">
+                        <v-form enctype="multipart/form-data" @submit.prevent="submitArquivos">
+                            <v-card-title>Adicione arquivos (max: 5)</v-card-title>
+
+                            <v-file-input
+                                label="Anexar Documento"
+                                v-model="formArquivos.files"
+                                name="files"
+                                accept=".jpg, .jpeg, .png, .pdf"
+                                density="compact"
+                                counter
+                                chips
+                                multiple
+                                @change="form.validateFiles()"
+                                :disabled="props.arquivos?.length >= 5"
+                                :rules="[maxFilesRule, maxSizeRule]"
+                            />
+
+                            <v-table v-if="props. arquivos && props.arquivos?.length != 0">
+                                <thead>
+                                    <tr>
+                                        <th>Arquivos</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        v-for="arquivo in props.arquivos"
+                                        :key="arquivo.id"
+                                    >
+                                        <td>{{ arquivo.name }}</td>
+                                        <td>
+                                            <Btn
+                                                variant="tonal"
+                                                size="small"
+                                                @click="dialogExcluir = true;
+                                                        arquivoExcluir.id = arquivo.id;
+                                                        arquivoExcluir.nome = arquivo.name"
+                                            >
+                                                Excluir
+                                            </Btn>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </v-table>
+                            
+                            <v-card-actions class="flex justify-end">
+                                <Btn
+                                    variant="flat"
+                                    v-if="props.textBtn == 'Atualizar'"
+                                    :disabled="formArquivos.processing || countFiles > 5"
+                                    type="submit"
+                                >
+                                    Adicionar
+                                </Btn>
+
+                                <Btn
+                                    @click="isDialogOpen = false"
+                                    variant="tonal"
+                                >
+                                    Fechar
+                                </Btn>
+                            </v-card-actions>
+                        </v-form>
+                    </v-card>
+                </v-dialog>
+
+                <div>
                     <Btn
                         @click="isDialogOpen = true"
                         variant="tonal"
                     >
                         Adicionar arquivos
                     </Btn>
-
-                    <p
-                        v-if="form.files != null"
-                        class="text-xs mt-1"
-                        :class="{'text-red-600' : form.files?.length > maxFiles}"
-                    >
-                        Quantidade de arquivos: {{ form.files?.length }}
-                    </p>
-                    
+    
+                    <MensagesArquivos 
+                        :textBtn="props.textBtn" 
+                        :selectedFiles="formArquivos.files" 
+                        :storedFiles="props.arquivos"
+                        :countFiles="countFiles"
+                    />
                 </div>
+
+                    
             </v-row>
             <v-row>
                 <v-col
@@ -362,7 +464,7 @@
 
                 <Btn
                     type="submit"
-                    :disable="form.processing"
+                    :disabled="form.processing"
                 >
                     {{ props.textBtn }}
                 </Btn>

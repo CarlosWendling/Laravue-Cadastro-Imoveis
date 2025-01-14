@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ArquivoRequest;
 use App\Http\Requests\StoreImovelRequest;
 use App\Models\Arquivo;
 use App\Models\Imovel;
@@ -70,17 +71,13 @@ class ImovelController extends Controller
         $imovel = Imovel::create($data);
 
         if ($request->hasFile('files')) {
-            foreach($request->file('files') as $file) {
-                if ($file->isValid()) {
-                    $name = $file->getClientOriginalName();
-                    $path = $file->store('arquivos', 'public');
-
-                    Arquivo::create([
-                        'name' => $name,
-                        'path' => $path,
-                        'inscricao_municipal_imovel' => $imovel->inscricao_municipal
-                    ]);
-                }
+            foreach ($request->file('files') as $file) {
+                $path = $file->store('arquivos', 'public');
+                Arquivo::create([
+                    'name' => $file->getClientOriginalName(),
+                    'path' => $path,
+                    'inscricao_municipal_imovel' => $imovel->inscricao_municipal,
+                ]);
             }
         }
 
@@ -90,7 +87,7 @@ class ImovelController extends Controller
     public function show ($inscricao_municipal) {
         $imovel = Imovel::findOrFail($inscricao_municipal);
         $pessoas = Pessoa::all(['id', 'nome']);
-        $arquivos = Arquivo::where('inscricao_municipal_imovel', $inscricao_municipal)->get(['name', 'path']);
+        $arquivos = Arquivo::where('inscricao_municipal_imovel', $inscricao_municipal)->get(['name', 'path', 'id']);
 
         return Inertia::render('Imoveis/VisualizarImovel', ['imovel' => $imovel, 
                                                             'pessoas' => $pessoas, 
@@ -101,29 +98,13 @@ class ImovelController extends Controller
     public function update(StoreImovelRequest $request) {
         $imovel = Imovel::findOrFail($request->inscricao_municipal);
     
-        $dadosAtualizados = $request->except('situacao');
+        $dadosAtualizados = $request->except(['situacao']);
     
         if ($request->has('contribuinte')) {
             $dadosAtualizados['pessoa_id'] = $request->input('contribuinte');
         }
-
+    
         $imovel->update($dadosAtualizados);
-        
-        // Gera erro ao tentar adicionar um arquivo
-        if ($request->hasFile('files')) {
-            foreach($request->file('files') as $file) {
-                if ($file->isValid()) {
-                    $name = $file->getClientOriginalName();
-                    $path = $file->store('arquivos', 'public');
-
-                    Arquivo::create([
-                        'name' => $name,
-                        'path' => $path,
-                        'inscricao_municipal_imovel' => $imovel->inscricao_municipal
-                    ]);
-                }
-            }
-        }
     
         return redirect('/imoveis')->with('success_message', 'Imóvel atualizado com sucesso');
     }
@@ -132,5 +113,40 @@ class ImovelController extends Controller
         Imovel::findOrFail($inscricao_municipal)->delete();
 
         return redirect('/imoveis')->with('success_message', 'Imóvel deletado com sucesso');
-    }   
+    }
+
+    // Arquivos
+    public function arquivosStore (ArquivoRequest $request) {
+        foreach($request->file('files') as $file) {
+            if ($file->isValid()) {
+                $name = $file->getClientOriginalName();
+                $path = $file->store('arquivos', 'public');
+
+                Arquivo::create([
+                    'name' => $name,
+                    'path' => $path,
+                    'inscricao_municipal_imovel' => $request->input('inscricao_municipal_imovel')
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('success_message', 'Arquivo adicionado com sucesso');
+    }
+
+    public function arquivosDestroy ($id) {
+        $arquivo = Arquivo::findOrFail($id);
+        $path = $arquivo->path;
+
+        // Vai deletar o arquivo e o seu caminho caso ambos existam
+        if ($arquivo) {
+            if (Storage::disk('public')->exists($path)) {
+                $arquivo->delete();
+                Storage::disk('public')->delete($path);
+            } else {
+                return redirect()->back()->with('error_message', 'Arquivo não encontrado');
+            }
+
+            return redirect()->back()->with('success_message', 'Arquivo deletado com sucesso');
+        }
+    }
 }
