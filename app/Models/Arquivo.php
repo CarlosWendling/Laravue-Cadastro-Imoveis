@@ -13,6 +13,6 @@ class Arquivo extends Model
     ];
 
     public function imovel() {
-        return $this->belongsTo('App\Models\Imovel');
+        return $this->belongsTo(Imovel::class, 'inscricao_municipal_imovel');
     }
 }

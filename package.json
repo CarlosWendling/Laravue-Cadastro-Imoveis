@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "@vueuse/core": "^12.0.0",
+        "js-file-download": "^0.4.12",
         "laravel-precognition-vue-inertia": "^0.5.14",
         "vue3-toastify": "^0.2.8",
         "vuetify": "^3.7.5"

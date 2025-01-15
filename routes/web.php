@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
         ->middleware([HandlePrecognitiveRequests::class])
         ->name('arquivos.store');
     Route::delete('/arquivos/destroy/{id}', [ImovelController::class, 'arquivosDestroy'])->name('arquivos.destoy');
+    Route::get('/arquivos/download/{file}', [ImovelController::class, 'arquivosDownload'])->where('path', '.*')->name('arquivos.download');
 
 
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios');

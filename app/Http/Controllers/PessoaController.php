@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePessoaRequest;
+use App\Models\Arquivo;
 use App\Models\Imovel;
 use App\Models\Pessoa;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class PessoaController extends Controller
@@ -67,6 +69,16 @@ class PessoaController extends Controller
             $pessoa->delete();
             return redirect('/pessoas')->with('success_message', 'Pessoa excluída com sucesso');
         } else {
+            $imoveis = Imovel::where('pessoa_id', $id)->get();
+            foreach($imoveis as $imovel) {
+                $arquivos = Arquivo::where('inscricao_municipal_imovel', $imovel->inscricao_municipal)->get();
+                foreach($arquivos as $arquivo) {
+                    $path = $arquivo->path;
+                    if (Storage::disk('public')->exists($path)) {
+                        Storage::disk('public')->delete($path);
+                    }
+                }
+            }
             $pessoa->delete();
             return redirect('/pessoas')->with('success_message', 'Pessoa e seus imóveis excluídos com sucesso');
         }

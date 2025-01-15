@@ -110,7 +110,22 @@ class ImovelController extends Controller
     }
 
     public function destroy ($inscricao_municipal) {
-        Imovel::findOrFail($inscricao_municipal)->delete();
+        $imovel = Imovel::findOrFail($inscricao_municipal);
+
+        if ($imovel) {
+            if ($imovel->arquivos->isEmpty()) {
+                $imovel->delete();
+            } else {
+                $arquivos = Arquivo::where('inscricao_municipal_imovel', $inscricao_municipal)->get();
+                foreach($arquivos as $arquivo) {
+                    $path = $arquivo->path;
+                    if (Storage::disk('public')->exists($path)) {
+                        Storage::disk('public')->delete($path);
+                    }
+                }
+                $imovel->delete();
+            }
+        }
 
         return redirect('/imoveis')->with('success_message', 'Imóvel deletado com sucesso');
     }
@@ -132,7 +147,8 @@ class ImovelController extends Controller
 
         return redirect()->back()->with('success_message', 'Arquivo adicionado com sucesso');
     }
-
+    
+    
     public function arquivosDestroy ($id) {
         $arquivo = Arquivo::findOrFail($id);
         $path = $arquivo->path;
@@ -147,6 +163,17 @@ class ImovelController extends Controller
             }
 
             return redirect()->back()->with('success_message', 'Arquivo deletado com sucesso');
+        }
+    }
+
+    public function arquivosDownload (Arquivo $file) {
+        $path = $file->path;
+        $name = $file->name;
+
+        if(Storage::disk('public')->exists($path)){
+            return Storage::disk('public')->download($path, $name);
+        } else {
+            return response()->json(['message' => 'Arquivo não encontrado'], 404);
         }
     }
 }

@@ -5,6 +5,8 @@
     import { ref, watch, computed } from 'vue'
     import { router } from '@inertiajs/vue3'
     import MensagesArquivos from './MensagesArquivos.vue'
+    import axios from 'axios'
+    import fileDownload from 'js-file-download'
 
     const props = defineProps({
         imovel: Object,
@@ -173,17 +175,31 @@
     const submitArquivos = () => {
         isDialogOpen.value = false
         formArquivos.submit(formArquivos)
+        formArquivos.files = null
     }
 
     let arquivoExcluir = {
         id: null,
-        nome: null,
+        nome: null
     }
 
     const excluirArquivos = (id) => {
         router.delete(`/arquivos/destroy/${id}`)
         dialogExcluir.value = false
     }
+
+    const downloadArquivos = (id, name) => {
+        axios
+        .get(`/arquivos/download/${id}`, {
+            responseType: 'blob',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        .then((response) => {
+            fileDownload(response.data, name);
+        })
+};
 
     // Envio do formulário
     const submit = () => {
@@ -218,23 +234,23 @@
                     width="600px"
                     attach="body"
                 >
-                    <v-card class="pt-2 pb-1 px-3">
+                    <v-card class="pt-3 pb-1 px-3">
                         <v-card-title>Deseja excluir o arquivo: {{ arquivoExcluir.nome }} ?</v-card-title>
 
                         <v-card-actions>
                             <Btn
-                                    variant="flat"
-                                    @click="excluirArquivos(arquivoExcluir.id)"
-                                >
-                                    Excluir
-                                </Btn>
+                                variant="flat"
+                                @click="excluirArquivos(arquivoExcluir.id)"
+                            >
+                                Excluir
+                            </Btn>
 
-                                <Btn
-                                    @click="dialogExcluir = false"
-                                    variant="tonal"
-                                >
-                                    Fechar
-                                </Btn>
+                            <Btn
+                                @click="dialogExcluir = false"
+                                variant="tonal"
+                            >
+                                Fechar
+                            </Btn>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
@@ -271,6 +287,7 @@
                                 </thead>
                                 <tbody>
                                     <tr
+                                        
                                         v-for="arquivo in props.arquivos"
                                         :key="arquivo.id"
                                     >
@@ -285,12 +302,21 @@
                                             >
                                                 Excluir
                                             </Btn>
+
+                                            <Btn
+                                                class="ml-2"
+                                                variant="tonal"
+                                                size="small"
+                                                @click="downloadArquivos(arquivo.id, arquivo.name)"
+                                            >
+                                                Download   
+                                            </Btn>
                                         </td>
                                     </tr>
                                 </tbody>
                             </v-table>
                             
-                            <v-card-actions class="flex justify-end">
+                            <v-card-actions class="flex justify-end mt-1">
                                 <Btn
                                     variant="flat"
                                     v-if="props.textBtn == 'Atualizar'"

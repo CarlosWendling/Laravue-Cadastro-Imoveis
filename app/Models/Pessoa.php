@@ -16,7 +16,7 @@ class Pessoa extends Model
     ];
 
     public function imoveis () {
-        return $this->hasMany(Imovel::class);
+        return $this->hasMany(Imovel::class, 'pessoa_id');
     }
 
     public function scopeFilter ($query, array $filters) {

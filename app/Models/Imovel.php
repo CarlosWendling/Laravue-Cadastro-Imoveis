@@ -23,11 +23,11 @@ class Imovel extends Model
     ];
 
     public function pessoa () {
-        return $this->belongsTo(Pessoa::class);
+        return $this->belongsTo(Pessoa::class, 'pessoa_id');
     }
     
     public function arquivos () {
-        return $this->hasMany(Arquivo::class);
+        return $this->hasMany(Arquivo::class, 'inscricao_municipal_imovel');
     }
     
     public function scopeFilter ($query, array $filters) {
