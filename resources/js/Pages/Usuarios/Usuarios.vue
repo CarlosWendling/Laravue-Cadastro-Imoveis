@@ -1,15 +1,18 @@
 <script setup>
     import Filtro from '@/Components/Filtro.vue'
+    import Pagination from '@/Components/Pagination.vue'
 
     const props = defineProps ({
         usuarios: Object,
+        filtros: Array,
+        routeName: String,
         errors: Object,
         auth: Object,
         flash: Object
     })
 
     const formatSituacao = (char) => {
-        if (char == 'A') {
+        if (char == 'S') {
             return 'Ativo'
         } else {
             return 'Inativo'
@@ -34,7 +37,7 @@
         <h1 class="text-2xl">Usuários</h1>
 
         <div class="flex items-center">
-            <Filtro />
+            <Filtro :filtros="props.filtros" :routeName="props.routeName" />
             
             <Btn class="ml-3">
                 <Link href="/register">
@@ -56,7 +59,7 @@
         </thead>
         <tbody>
             <tr
-                v-for="usuario in props.usuarios"
+                v-for="usuario in props.usuarios.data"
                 :key="usuario.id"
             >
                 <td>{{ usuario.id }}</td>
@@ -75,4 +78,8 @@
             </tr>
         </tbody>
     </v-table>
+    <Pagination 
+        :links="props.usuarios.links"
+        class="mt-6 pb-2"
+    />
 </template>

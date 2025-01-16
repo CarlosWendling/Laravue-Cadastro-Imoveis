@@ -105,9 +105,9 @@
         'Inativo'
     ]
 
-    const situacaoPesquisa = ref(null)
+    const situacaoPesquisaImovel = ref(null)
     
-    watch(situacaoPesquisa, value => {
+    watch(situacaoPesquisaImovel, value => {
         if (value == "Ativo") {
             search.value = true
         } else if (value == "Inativo") {
@@ -115,6 +115,47 @@
         } else {
             search.value = ''
         }
+    })
+
+    
+    // Filtros Usuários
+    const situacaoPesquisaUser = ref(null)
+
+    watch(situacaoPesquisaUser, value => {
+        form.campo = 'ativo'
+
+        if (value == "Ativo") {
+            search.value = 'S'
+        } else if (value == "Inativo") {
+            search.value = 'N'
+        } else {
+            search.value = ''
+        }
+    })
+
+    const perfil = ref(null)
+
+    const perfils = [
+        'Administrador da TI',
+        'Administrador do sistema',
+        'Atendente',
+    ]
+
+    watch(perfil, value => {
+        if (value == 'Administrador da TI') {
+            search.value = 'T'
+        } else if (value == 'Administrador do sistema') {
+            search.value = 'S'
+        } else {
+            search.value = 'A'
+        }
+    })
+
+    const searchNomeUser = ref(null)
+
+    watch(searchNomeUser, value => {
+        form.campo = 'name'
+        search.value = value
     })
     
     // Envio da pesquisa
@@ -150,9 +191,40 @@
             clearable
         />
 
+        <!-- Filtros Usuários -->
+        <v-text-field
+            v-if="campo == 'Nome' && props.routeName == 'usuarios'"
+            class="w-64"
+            v-model="searchNomeUser"
+            clearable
+        />
+
+        <v-text-field
+            v-if="campo == 'Email'"
+            class="w-64"
+            v-model="search"
+            clearable
+        />
+
+        <v-select
+            v-if="campo == 'Perfil'"
+            class="w-64"
+            v-model="perfil"
+            :items="perfils"
+            clearable
+        />
+
+        <v-select 
+            v-if="campo == 'Situação' && props.routeName == 'usuarios'"
+            class="w-64"
+            v-model="situacaoPesquisaUser"
+            :items="situacao"
+            clearable
+        />
+
         <!-- Filtros Pessoas -->
         <v-text-field
-            v-if="campo == 'Nome'"
+            v-if="campo == 'Nome' && props.routeName == 'pessoas'"
             class="w-64"
             v-model="search"
             clearable
@@ -251,9 +323,9 @@
         />
 
         <v-select 
-            v-if="campo == 'Situação'"
+            v-if="campo == 'Situação' && props.routeName == 'imoveis'"
             class="w-64"
-            v-model="situacaoPesquisa"
+            v-model="situacaoPesquisaImovel"
             :items="situacao"
             clearable
         />

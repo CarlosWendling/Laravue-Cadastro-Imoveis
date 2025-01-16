@@ -10,7 +10,7 @@
         password_confirmation: '',
         perfil: '',
         cpf: '',
-        ativo: 'A',
+        ativo: 'N',
     };
 
     const form = useForm('post', route('register'), data)
@@ -51,8 +51,6 @@
 
     watch (cpfFront, () => {
             form.cpf = formatCpfBack(cpfFront.value)
-
-            console.log(form.cpf)
     })
 
     const submit = () => {
