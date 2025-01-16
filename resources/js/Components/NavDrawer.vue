@@ -51,7 +51,7 @@
     >
         <NavLink
             :href="route('usuarios')"
-            :active="$page.component.includes('Usuarios')"
+            :active="$page.component.includes('Usuarios') || $page.component.includes('Register')"
         >
             Usuários
         </NavLink>

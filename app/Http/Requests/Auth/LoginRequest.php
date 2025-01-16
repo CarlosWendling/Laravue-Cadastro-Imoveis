@@ -32,6 +32,16 @@ class LoginRequest extends FormRequest
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'email.required' => 'Preencha com o seu email',
+            'email.email' => 'Email inválido',
+            'email.auth' => 'Credenciais não cadastradas',
+            'password.required' => 'Preencha com a sua senha',
+        ];
+    }
+
     /**
      * Attempt to authenticate the request's credentials.
      *
@@ -45,7 +55,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'email' => trans('Credenciais não cadastradas'),
             ]);
         }
 

@@ -11,7 +11,7 @@ use Inertia\Inertia;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
 Route::get('/', function () {
-    return redirect('register');
+    return redirect('login');
 });
 
 Route::middleware('auth')->group(function () {

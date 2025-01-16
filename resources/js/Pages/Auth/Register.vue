@@ -1,113 +1,175 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+    import { useForm } from 'laravel-precognition-vue-inertia';
+    import { ref, watch } from 'vue'
+    import NumberInput from '@/Components/NumberInput.vue'
 
-const form = useForm({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
-});
+    let data = {
+        name: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
+        perfil: '',
+        cpf: '',
+        ativo: 'A',
+    };
 
-const submit = () => {
-    form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
-    });
-};
+    const form = useForm('post', route('register'), data)
+
+    const perfil = ref(null)
+    const perfils = [
+        'Administrador da TI',
+        'Administrador do sistema',
+        'Atendente',
+    ]
+
+    watch(perfil, value => {
+        if (value == 'Administrador da TI') {
+            form.perfil = 'T'
+        } else if (value == 'Administrador do sistema') {
+            form.perfil = 'S'
+        } else {
+            form.perfil = 'A'
+        }
+    })
+
+    const formatCpfBack = (cpf) => {
+            cpf = cpf.replace(/\D/g, '')
+
+            return cpf
+    }
+
+    let cpfFront = ref(form.cpf)
+    form.cpf = formatCpfBack(cpfFront.value)
+
+    const cpfDinamico = () => {
+            if(cpfFront.value.length == 3 || cpfFront.value.length == 7){    
+                cpfFront.value += '.'
+            }else if(cpfFront.value.length == 11) {
+                cpfFront.value += '-';
+            }
+    }
+
+    watch (cpfFront, () => {
+            form.cpf = formatCpfBack(cpfFront.value)
+
+            console.log(form.cpf)
+    })
+
+    const submit = () => {
+        form.submit(form, {
+            onFinish: () => form.reset('password', 'password_confirmation'),
+        })
+    };
 </script>
 
-<template>
-    <GuestLayout>
-        <Head title="Register" />
+<template>    
+    <Head title="Register" />
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
+    <form @submit.prevent="submit">
+        <v-container>
+            <v-row class="pl-3 pt-6 pb-1">
+                <h1 class="text-2xl">Cadastro Usuário</h1>
+            </v-row>
 
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
-
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation"
-                />
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
-                <Link
-                    :href="route('login')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            <v-row>
+                <v-col
+                    cols="12"
+                    md="6"
                 >
-                    Already registered?
-                </Link>
+                    <v-text-field 
+                        label="Nome Completo"
+                        v-model="form.name"
+                        required
+                        @change="form.validate('name')"
+                        :error-messages="form.errors.name"
+                    />
+                </v-col>
 
-                <PrimaryButton
-                    class="ms-4"
+                <v-col
+                    cols="12"
+                    md="6"
+                >
+                    <v-text-field 
+                        label="Email"
+                        v-model="form.email"
+                        required
+                        @change="form.validate('email')"
+                        :error-messages="form.errors.email"
+                    />
+                </v-col>
+            </v-row>
+
+            <v-row>
+                <v-col
+                    cols="12"
+                    md="6"
+                >
+                    <v-text-field 
+                        label="Senha"
+                        v-model="form.password"
+                        type="password"
+                        required
+                        @change="form.validate('password')"
+                        :error-messages="form.errors.password"
+                    />
+                </v-col>
+
+                <v-col
+                    cols="12"
+                    md="6"
+                >
+                    <v-text-field 
+                        label="Confirme a senha"
+                        v-model="form.password_confirmation"
+                        type="password"
+                        required
+                        @change="form.validate('password_confirmation')"
+                        :error-messages="form.errors.password_confirmation"
+                    />
+                </v-col>
+            </v-row>
+
+            <v-row>
+                <v-col
+                    cols="12"
+                    md="6"
+                >
+                    <v-select
+                        label="Perfil"
+                        v-model="perfil"
+                        :items="perfils"
+                        required
+                        @change="form.validate('perfil')"
+                        :error-messages="form.errors.perfil"
+                    />
+                </v-col>
+
+                <v-col
+                    cols="12"
+                    md="6"
+                >
+                    <NumberInput
+                        label="CPF"
+                        v-model="cpfFront"
+                        @keydown="cpfDinamico()"
+                        maxlength="14"
+                        required
+                        @change="form.validate('cpf')"
+                        :error-messages="form.errors.cpf"
+                    />
+                </v-col>
+
+            </v-row>
+            
+            <v-row class="flex justify-end pb-5">                
+                <Btn
+                    type="submit"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Register
-                </PrimaryButton>
-            </div>
-        </form>
-    </GuestLayout>
+                    Cadastrar
+                </Btn>
+            </v-row>
+        </v-container>
+    </form>
 </template>

@@ -9,7 +9,10 @@ import { Link } from '@inertiajs/vue3';
     >
         <div>
             <Link href="/">
-                <ApplicationLogo class="h-20 w-20 fill-current text-gray-500" />
+                <img 
+                    src="/storage/imagens/Prefeitura_Sao_Leopoldo-logo-png.png" alt="Logo Prefeitura Municipal de São Leopoldo"
+                    width="75px"
+                >
             </Link>
         </div>
 

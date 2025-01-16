@@ -21,12 +21,11 @@ const vuetify = createVuetify({
   blueprint: md1,
 })
 
+function aplicarLayout (name) {
+  return !name.startsWith('Auth/Login')
+}
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
-
-function aplicarLayout (name) {
-  return !name.startsWith('Auth/')
-}
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
