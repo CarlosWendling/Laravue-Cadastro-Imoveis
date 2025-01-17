@@ -6,7 +6,7 @@
         usuarios: Object,
         filtros: Array,
         routeName: String,
-        usuarioAtual: Array,
+        usuarioAtual: Object,
         errors: Object,
         auth: Object,
         flash: Object
@@ -40,7 +40,7 @@
         <div class="flex items-center">
             <Filtro :filtros="props.filtros" :routeName="props.routeName" />
             
-            <Btn v-if="props.usuarioAtual.perfil != 'A'" class="ml-3">
+            <Btn :disabled="props.usuarioAtual.perfil == 'A'" class="ml-3">
                 <Link href="/register">
                     Cadastrar
                 </Link>
@@ -72,8 +72,11 @@
                     <Btn
                         variant="tonal"
                         prepend-icon="mdi-pencil"
+                        :disabled=" (props.usuarioAtual.perfil == 'S' && usuario.perfil != 'A') || props.usuarioAtual.perfil == 'A'"
                     >
-                        Visualizar
+                        <Link :href="route('usuario.show', usuario.id)">
+                            Visualizar
+                        </Link>
                     </Btn>
                 </td>
             </tr>

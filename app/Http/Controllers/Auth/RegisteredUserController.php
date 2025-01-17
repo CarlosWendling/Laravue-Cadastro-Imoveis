@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Requests\StoreUsuarioRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -52,8 +53,32 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
-
         return redirect('/usuarios')->with('success_message', 'Usuário criado com sucesso');
+    }
+
+    public function show ($id) 
+    {
+        $usuario = User::findOrFail($id);
+
+        $usuarioAtual = auth()->user()->only([
+            'id', 
+            'perfil'
+        ]);
+
+        return Inertia::render('Usuarios/VisualizarUsuario', [
+            'usuario' => $usuario,
+            'usuarioAtual' => $usuarioAtual,
+        ]);
+    }
+
+    public function update (ProfileUpdateRequest $request) 
+    {
+        $usuario = User::findOrFail($request->id);
+
+        $dadosAtualizados = $request->except(['cpf', 'email', 'password']);
+
+        $usuario->update($dadosAtualizados);
+
+        return redirect('/usuarios')->with('success_message', 'Usuário atualizado com sucesso');
     }
 }

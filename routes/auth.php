@@ -35,9 +35,14 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
-    
+        
     Route::post('register', [RegisteredUserController::class, 'store'])->middleware([HandlePrecognitiveRequests::class]);
-    
+        
+    Route::get('/usuario/${id}', [RegisteredUserController::class, 'show'])
+        ->name('usuario.show');
+
+    Route::put('/usuario/update', [RegisteredUserController::class, 'update'])->middleware([HandlePrecognitiveRequests::class]);
+
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
 
@@ -54,7 +59,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
 
-    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+    Route::put('/password/{id}', [PasswordController::class, 'update'])->name('password.update');
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');

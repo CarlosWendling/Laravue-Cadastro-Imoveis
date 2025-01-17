@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\ImovelController;
 use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\ProfileController;
@@ -49,6 +50,7 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios');
+    Route::get('/usuarios/nova-senha/{id}', [PasswordController::class, 'show'])->name('password.show');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
