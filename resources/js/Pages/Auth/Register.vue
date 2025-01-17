@@ -3,6 +3,10 @@
     import { ref, watch } from 'vue'
     import NumberInput from '@/Components/NumberInput.vue'
 
+    const props = defineProps ({
+        usuarioAtual: Array
+    })
+
     let data = {
         name: '',
         email: '',
@@ -10,15 +14,19 @@
         password_confirmation: '',
         perfil: '',
         cpf: '',
-        ativo: 'N',
+        ativo: 'S',
     };
 
     const form = useForm('post', route('register'), data)
 
     const perfil = ref(null)
-    const perfils = [
+    const perfilsTI = [
         'Administrador da TI',
         'Administrador do sistema',
+        'Atendente',
+    ]
+
+    const perfilsSistema = [
         'Atendente',
     ]
 
@@ -133,12 +141,25 @@
                     md="6"
                 >
                     <v-select
+                        v-if="props.usuarioAtual.perfil == 'T'"
                         label="Perfil"
                         v-model="perfil"
-                        :items="perfils"
+                        :items="perfilsTI"
                         required
                         @change="form.validate('perfil')"
                         :error-messages="form.errors.perfil"
+                        clearable
+                    />
+
+                    <v-select
+                        v-if="props.usuarioAtual.perfil == 'S'"
+                        label="Perfil"
+                        v-model="perfil"
+                        :items="perfilsSistema"
+                        required
+                        @change="form.validate('perfil')"
+                        :error-messages="form.errors.perfil"
+                        clearable
                     />
                 </v-col>
 

@@ -13,6 +13,11 @@ class UsuarioController extends Controller
         $filtros = ['Nome', 'Email', 'Perfil', 'Situação'];
         $routeName = Route::currentRouteName();
 
+        $usuarioAtual = auth()->user()->only([
+            'id', 
+            'perfil'
+        ]);
+
         $usuarios = User::
             filter(request(['campo', 'pesquisa']))
             ->paginate(10)
@@ -30,6 +35,7 @@ class UsuarioController extends Controller
             'usuarios' => $usuarios,
             'filtros' => $filtros,
             'routeName' => $routeName,
+            'usuarioAtual' => $usuarioAtual,
         ]);
     }
 }

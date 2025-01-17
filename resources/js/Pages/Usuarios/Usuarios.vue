@@ -6,6 +6,7 @@
         usuarios: Object,
         filtros: Array,
         routeName: String,
+        usuarioAtual: Array,
         errors: Object,
         auth: Object,
         flash: Object
@@ -39,7 +40,7 @@
         <div class="flex items-center">
             <Filtro :filtros="props.filtros" :routeName="props.routeName" />
             
-            <Btn class="ml-3">
+            <Btn v-if="props.usuarioAtual.perfil != 'A'" class="ml-3">
                 <Link href="/register">
                     Cadastrar
                 </Link>

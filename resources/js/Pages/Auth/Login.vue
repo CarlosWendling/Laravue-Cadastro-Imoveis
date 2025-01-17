@@ -52,6 +52,7 @@ const submit = () => {
                     <v-text-field 
                         label="Senha"
                         v-model="form.password"
+                        type="password"
                         required
                         :error-messages="form.errors.password"
                     />
