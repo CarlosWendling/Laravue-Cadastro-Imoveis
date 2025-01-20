@@ -27,5 +27,15 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('cadastro-usuario', function(User $user) {
             return $user->perfil === 'T' || $user->perfil === 'S';
         });
+
+        Gate::define('editar-usuario', function(User $user, User $editavel) {
+            if ($user->perfil == 'T') {
+                return true;
+            } else if ($user->perfil == 'S' && $editavel->perfil == 'A') {
+                return true;
+            }
+
+            return false;
+        });
     }
 }

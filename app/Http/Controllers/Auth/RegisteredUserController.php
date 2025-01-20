@@ -60,6 +60,9 @@ class RegisteredUserController extends Controller
     {
         $usuario = User::findOrFail($id);
 
+        Gate::authorize('editar-usuario', $usuario);
+        
+
         $usuarioAtual = auth()->user()->only([
             'id', 
             'perfil'

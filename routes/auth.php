@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
         
     Route::post('register', [RegisteredUserController::class, 'store'])->middleware([HandlePrecognitiveRequests::class]);
         
-    Route::get('/usuario/${id}', [RegisteredUserController::class, 'show'])
+    Route::get('/usuario/{id}', [RegisteredUserController::class, 'show'])
         ->name('usuario.show');
 
     Route::put('/usuario/update', [RegisteredUserController::class, 'update'])->middleware([HandlePrecognitiveRequests::class]);

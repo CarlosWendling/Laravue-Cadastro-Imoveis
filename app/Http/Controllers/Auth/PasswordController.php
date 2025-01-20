@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Gate;
 
 class PasswordController extends Controller
 {
@@ -18,6 +19,8 @@ class PasswordController extends Controller
     public function show($id)
     {
         $user = User::findOrFail($id);
+
+        Gate::authorize('editar-usuario', $user);
 
         return Inertia::render('Usuarios/NovaSenha', [
             'user' => $user,
