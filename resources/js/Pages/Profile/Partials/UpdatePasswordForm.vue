@@ -47,7 +47,7 @@ const updatePassword = () => {
                         label="Senha atual"
                         ref="currentPasswordInput"
                         v-model="form.current_password"
-                        
+                        type="password"
                         :error-messages="form.errors.current_password"
                     />
                 </v-row>
@@ -57,7 +57,7 @@ const updatePassword = () => {
                         label="Nova senha"
                         ref="passwordInput"
                         v-model="form.password"
-                        
+                        type="password"
                         :error-messages="form.errors.password"
                     />
                 </v-row>
@@ -65,7 +65,7 @@ const updatePassword = () => {
                     <v-text-field 
                         label="Confirme a nova senha"
                         v-model="form.password_confirmation"
-                        
+                        type="password"
                         :error-messages="form.errors.password_confirmation"
                     />
                 </v-row>

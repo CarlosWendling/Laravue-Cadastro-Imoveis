@@ -29,4 +29,14 @@ class NewPasswordRequest extends FormRequest
 
         return $rules;
     }
+
+    public function messages()
+    {
+        return [
+            'current_password.required' => 'Preencha com a senha atual',
+            'password.min' => 'A senha precisa ter no mínimo 8 caracteres',
+            'password.required' => 'Preencha com a nova senha',
+            'password.confirmed' => 'A senha nova não coincide'
+        ];
+    }
 }

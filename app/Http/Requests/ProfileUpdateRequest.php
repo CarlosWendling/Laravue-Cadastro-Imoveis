@@ -27,4 +27,18 @@ class ProfileUpdateRequest extends FormRequest
 
         return $rules;
     }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'O campo do nome é obrigatório',
+            'name.min' => 'Preencha com o nome completo',
+            'email.required' => 'O campo do email é obrigatório',
+            'email.email' => 'Email inválido',
+            'email.unique' => 'Email já cadastrado',
+            'cpf.required' => 'O campo do CPF é obrigatório',
+            'cpf.unique' => 'CPF já cadastrado',
+            'perfil.required' => 'O campo do perfil é obrigatório',
+        ];
+    }
 }
