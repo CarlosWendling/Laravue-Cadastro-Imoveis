@@ -431,7 +431,7 @@
                 >
                     <DecNumberInput 
                         label="Área do Terreno" 
-                        :disabled="tipo == 'Apartamento'"
+                        :disabled="tipo != 'Casa' && tipo != 'Terreno'"
                         v-model="terrenoFront"
                         @focus="handleFocus" 
                         @blur="handleBlur"
@@ -447,7 +447,7 @@
                 >
                     <DecNumberInput
                         label="Área da Edificação"
-                        :disabled="tipo == 'Terreno'"
+                        :disabled="tipo != 'Casa' && tipo != 'Apartamento'"
                         v-model="edificacaoFront"
                         @focus="handleFocus" 
                         @blur="handleBlur" 
