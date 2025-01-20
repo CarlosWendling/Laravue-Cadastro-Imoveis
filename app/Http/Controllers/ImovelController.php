@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ArquivoRequest;
 use App\Http\Requests\StoreImovelRequest;
 use App\Models\Arquivo;
+use App\Models\Averbacao;
 use App\Models\Imovel;
 use App\Models\Pessoa;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -87,10 +87,13 @@ class ImovelController extends Controller
     public function show ($inscricao_municipal) {
         $imovel = Imovel::findOrFail($inscricao_municipal);
         $pessoas = Pessoa::all(['id', 'nome']);
+        $averbacoes = Averbacao::where('inscricao_municipal_imovel', $inscricao_municipal)->get();
+
         $arquivos = Arquivo::where('inscricao_municipal_imovel', $inscricao_municipal)->get(['name', 'path', 'id']);
 
         return Inertia::render('Imoveis/VisualizarImovel', ['imovel' => $imovel, 
                                                             'pessoas' => $pessoas, 
+                                                            'averbacoes' => $averbacoes, 
                                                             'arquivos' => $arquivos
                                                             ]);
     }

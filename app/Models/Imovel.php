@@ -29,6 +29,10 @@ class Imovel extends Model
     public function arquivos () {
         return $this->hasMany(Arquivo::class, 'inscricao_municipal_imovel');
     }
+
+    public function averbacoes () {
+        return $this->hasMany(Averbacao::class, 'inscricao_municipal_imovel');
+    }
     
     public function scopeFilter ($query, array $filters) {
 

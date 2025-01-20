@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\AverbacaoController;
 use App\Http\Controllers\ImovelController;
 use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsuarioController;
+use App\Models\Imovel;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +49,12 @@ Route::middleware('auth')->group(function () {
         ->name('arquivos.store');
     Route::delete('/arquivos/destroy/{id}', [ImovelController::class, 'arquivosDestroy'])->name('arquivos.destoy');
     Route::get('/arquivos/download/{file}', [ImovelController::class, 'arquivosDownload'])->where('path', '.*')->name('arquivos.download');
+
+    // Averbações
+    Route::get('/imovel/averbacoes/{id}', [AverbacaoController::class, 'create'])->name('averbacao.create');
+    Route::post('/imovel/averbacoes/store', [AverbacaoController::class, 'store'])
+        ->middleware([HandlePrecognitiveRequests::class])
+        ->name('averbacao.store');
 
 
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios');

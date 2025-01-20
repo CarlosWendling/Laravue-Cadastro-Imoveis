@@ -4,6 +4,7 @@
     const props = defineProps ({
         imovel: Object,
         pessoas: Object,
+        averbacoes: Object,
         arquivos: Object
     })
 </script>
@@ -15,6 +16,7 @@
     <FormImovel 
         :imovel="props.imovel"
         :pessoas="props.pessoas" 
+        :averbacoes="props.averbacoes" 
         :arquivos="props.arquivos" 
         textBtn="Atualizar" 
         method="put" 

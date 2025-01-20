@@ -1,6 +1,7 @@
 <script setup>
     import NumberInput from '@/Components/NumberInput.vue'
     import DecNumberInput from './DecNumberInput.vue'
+    import AverbacoesDialog from './AverbacoesDialog.vue'
     import { useForm } from 'laravel-precognition-vue-inertia'
     import { ref, watch, computed } from 'vue'
     import { router } from '@inertiajs/vue3'
@@ -11,6 +12,7 @@
     const props = defineProps({
         imovel: Object,
         pessoas: Array,
+        averbacoes: Array,
         arquivos: Array,
         method: String,
         route: String,
@@ -199,7 +201,14 @@
         .then((response) => {
             fileDownload(response.data, name);
         })
-};
+    }
+
+    // Averbações
+    const isAverbacoesOpen = ref(false)
+
+    const fecharAverbacao = () => {
+        isAverbacoesOpen.value = false
+    }
 
     // Envio do formulário
     const submit = () => {
@@ -335,6 +344,18 @@
                             </v-card-actions>
                         </v-form>
                     </v-card>
+                </v-dialog>
+
+                <v-dialog
+                    v-model="isAverbacoesOpen"
+                    width="600px"
+                    attach="body"
+                >
+                    <AverbacoesDialog
+                        @close="fecharAverbacao" 
+                        :imovel="props?.imovel" 
+                        :averbacoes="props?.averbacoes"
+                    />
                 </v-dialog>
 
                 <div>
@@ -488,12 +509,24 @@
                     />
                 </v-col>
 
-                <Btn
-                    type="submit"
-                    :disabled="form.processing"
-                >
-                    {{ props.textBtn }}
-                </Btn>
+                <div>
+                    <Btn
+                        v-if="textBtn == 'Atualizar'"
+                        variant="tonal"
+                        class="mr-3"
+                        @click="isAverbacoesOpen = true"
+                    >
+                        Averbações
+                    </Btn>
+
+                    <Btn
+                        type="submit"
+                        :disabled="form.processing"
+                    >
+                        {{ props.textBtn }}
+                    </Btn>
+                </div>
+
             </v-row>
         </v-container>
     </v-form>
