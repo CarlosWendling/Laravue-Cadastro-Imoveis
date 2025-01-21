@@ -2,6 +2,9 @@
     const props = defineProps ({
         imovel: Object,
         averbacoes: Array,
+        errors: Object,
+        auth: Object,
+        flash: Object
     })
 
     const emit = defineEmits(['close'])
@@ -22,6 +25,7 @@
                     <th>Id</th>
                     <th>Evento</th>
                     <th>Data</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,6 +42,16 @@
                     <td>{{ averbacao.id }}</td>
                     <td>{{ averbacao.evento }}</td>
                     <td>{{ formatDate(averbacao.data_averbacao) }}</td>
+                    <td>
+                        <Btn 
+                            variant="tonal"
+                            size="small"
+                        >
+                            <Link :href="route('averbacao.show', averbacao.id)">
+                                Visualizar
+                            </Link>
+                        </Btn>
+                    </td>
                 </tr>
             </tbody>
         </v-table>

@@ -1,7 +1,7 @@
 <script setup>
     import NumberInput from '@/Components/NumberInput.vue'
     import DecNumberInput from './DecNumberInput.vue'
-    import AverbacoesDialog from './AverbacoesDialog.vue'
+    import AverbacoesDialog from '../Pages/Imoveis/Averbacoes/AverbacoesDialog.vue'
     import { useForm } from 'laravel-precognition-vue-inertia'
     import { ref, watch, computed } from 'vue'
     import { router } from '@inertiajs/vue3'

@@ -70,4 +70,12 @@ class AverbacaoController extends Controller
 
         return redirect('/imovel/' . $request->inscricao_municipal_imovel)->with('success_message', 'Averbação adicionada com sucesso');
     }
+
+    public function show ($id) {
+        $averbacao = Averbacao::findOrFail($id);
+
+        return Inertia::render('Imoveis/Averbacoes/VisualizarAverbacao', [
+            'averbacao' => $averbacao
+        ]);
+    }
 }

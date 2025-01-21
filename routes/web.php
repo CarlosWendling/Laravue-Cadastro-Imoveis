@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/imovel/averbacoes/store', [AverbacaoController::class, 'store'])
         ->middleware([HandlePrecognitiveRequests::class])
         ->name('averbacao.store');
+    Route::get('/imovel/averbacao/{id}', [AverbacaoController::class, 'show'])->name('averbacao.show');
 
 
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios');
