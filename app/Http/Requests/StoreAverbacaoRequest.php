@@ -29,7 +29,7 @@ class StoreAverbacaoRequest extends FormRequest
         ];
 
         if ($this->input('evento') == 'Aumento Área Construída' || $this->input('evento') == 'Redução Área Construída') {
-            $rules['medida'] = ['required', 'min:1'];
+            $rules['medida'] = ['required', 'numeric', 'min:1'];
         } else {
             $rules['medida'] = ['nullable'];
         }
@@ -44,6 +44,7 @@ class StoreAverbacaoRequest extends FormRequest
             'descricao.required' => 'O campo da descrição é obrigatório',
             'descricao.min' => 'O campo da descrição deve ter no mínimo 10 caracteres',
             'medida.required' => 'O campo da medida é obrigatório',
+            'medida.min' => 'O campo da medida não pode ser zero',
         ];
     }
 }

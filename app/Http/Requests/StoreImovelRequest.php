@@ -28,7 +28,7 @@ class StoreImovelRequest extends FormRequest
             'complemento' => 'nullable',
             'numero' => 'required',
             'contribuinte' => 'required',
-            'tipo' => 'required',
+            'tipo' => 'required|string',
             'files.*' => ['file', 'max:3072', 'mimes:jpg,jpeg,png,pdf'],
             'files' => ['nullable', 'array', 'max:5'],
             'situacao' => 'required'
@@ -36,7 +36,7 @@ class StoreImovelRequest extends FormRequest
 
         if ($this->input('tipo') == 'Terreno') {
             $rules['area_terreno'] = 'required|numeric|min:1';
-            $rules['area_edificacao'] = 'required|numeric|min:0';
+            $rules['area_edificacao'] = 'required|numeric|min:0|max:0';
         }
 
         if ($this->input('tipo') == 'Casa') {
@@ -45,7 +45,7 @@ class StoreImovelRequest extends FormRequest
         }
 
         if ($this->input('tipo') == 'Apartamento') {
-            $rules['area_terreno'] = 'required|numeric|min:0';
+            $rules['area_terreno'] = 'required|numeric|min:0|max:0';
             $rules['area_edificacao'] = 'required|numeric|min:1';
         }
 
@@ -63,8 +63,10 @@ class StoreImovelRequest extends FormRequest
             'contribuinte.required' => 'Selecione um contribuinte',
             'area_terreno.required' => 'A área do terreno é obrigatória',
             'area_terreno.min' => 'A área do terreno não pode ser zero',
+            'area_terreno.max' => 'A área do terreno deve ser 0 para apartamentos',
             'area_edificacao.required' => 'A área da edificação é obrigatória',
             'area_edificacao.min' => 'A área da edificação não pode ser zero',
+            'area_edificacao.max' => 'A área da edificação deve ser 0 para terrenos',
             'tipo.required' => 'Selecione o tipo da propriedade'
         ];
     }

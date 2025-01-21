@@ -44,6 +44,26 @@ class AverbacaoController extends Controller
                     $imovel->save();
                 }
                 break;
+                
+            case 'Aumento Área Construída':
+                $medida = $request->medida;
+                if ($imovel->area_edificacao >= $medida) {
+                    return redirect('/imovel/' . $request->inscricao_municipal_imovel)->with('error_message', 'A área deve ser maior que a área cadastrada');
+                } else {
+                    $imovel->area_edificacao = $medida;
+                    $imovel->save();
+                }
+                break;
+                
+                case 'Redução Área Construída':
+                    $medida = $request->medida;
+                    if ($imovel->area_edificacao <= $medida) {
+                        return redirect('/imovel/' . $request->inscricao_municipal_imovel)->with('error_message', 'A área deve ser menor que a área cadastrada');
+                    } else {
+                        $imovel->area_edificacao = $medida;
+                        $imovel->save();
+                    }
+                    break;
         }
 
         Averbacao::create($data);

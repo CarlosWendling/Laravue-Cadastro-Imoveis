@@ -129,7 +129,7 @@
     }
 
     const handleBlurTipo = () => {
-        if (tipo.value == 'Terreno') {
+        if (tipo.value == 'Terreno' && props.textBtn == 'Cadastrar') {
             edificacaoFront.value = '0 m²'
             form.area_edificacao = formatAreaBack(edificacaoFront.value)
         }
@@ -438,10 +438,10 @@
                     :items="pessoas"
                     item-title="nome"
                     item-value="id"
+                    required
                     clearable
                     @change="form.validate('contribuinte')"
                     :error-messages="form.errors.contribuinte"
-                    required
                     />
                 </v-col>
             </v-row>
@@ -457,7 +457,7 @@
                         @focus="handleFocus" 
                         @blur="handleBlur"
                         @change="form.validate('area_terreno')"
-                        :error-messages="form.errors.area_terreno"
+                        :error-messages="form.errors?.area_terreno"
                     />
                 </v-col>
 
@@ -468,7 +468,7 @@
                 >
                     <DecNumberInput
                         label="Área da Edificação"
-                        :disabled="tipo != 'Casa' && tipo != 'Apartamento'"
+                        :disabled="tipo != 'Casa' && tipo != 'Apartamento' || props.textBtn == 'Atualizar'"
                         v-model="edificacaoFront"
                         @focus="handleFocus" 
                         @blur="handleBlur" 
