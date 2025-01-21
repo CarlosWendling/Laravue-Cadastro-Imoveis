@@ -21,6 +21,14 @@
         return cpf
     }
 
+    const formatSituacao = (num) => {
+        if (num == 1) {
+            return 'Ativo'
+        } else {
+            return 'Inativo'
+        }
+    }
+
     let imovelExcluir = {
         inscricao_municipal: null,
         contribuinte: null,
@@ -91,6 +99,7 @@
                 <th>Número</th>
                 <th>Bairro</th>
                 <th>Contribuinte</th>
+                <th>Situação</th>
                 <th class="flex justify-center items-center pr-12">Ações</th>
             </tr>
         </thead>
@@ -102,12 +111,20 @@
                 v-for="imovel in props.imoveis.data" 
                 :key="imovel.inscricao_municipal"
             >
-                <td>{{ imovel.inscricao_municipal }}</td>
+                <td class="">{{ imovel.inscricao_municipal }}</td>
                 <td>{{ imovel.tipo }}</td>
                 <td>{{ imovel.logradouro }}</td>
                 <td>{{ imovel.numero }}</td>
                 <td>{{ imovel.bairro }}</td>
                 <td>{{ imovel.pessoa?.nome }}</td>
+                <td>
+                    <span
+                        class="situacao-visual"
+                        :class="imovel.situacao == 1 ? 'ativo' : 'inativo'"
+                    >
+                    </span>
+                    {{ formatSituacao(imovel.situacao) }}
+                </td>
                 <td class="flex items-center">
                     <Btn
                         variant="tonal"
@@ -141,3 +158,22 @@
         class="mt-6 pb-2"
     />
 </template>
+
+<style scoped>
+    .situacao-visual {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 6px;
+        flex-shrink: 0;
+    }
+
+    .situacao-visual.ativo {
+        background-color: green;
+    }
+
+    .situacao-visual.inativo {
+        background-color: red;
+    }
+</style>

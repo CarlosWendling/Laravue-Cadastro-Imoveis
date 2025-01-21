@@ -22,6 +22,30 @@ class AverbacaoController extends Controller
     public function store (StoreAverbacaoRequest $request) {
         $data = $request->validated();
 
+        $imovel = Imovel::where('inscricao_municipal', $request->inscricao_municipal_imovel)->first();
+
+        $evento = $request->input('evento');
+
+        switch ($evento) {
+            case 'Cancelamento':
+                if ($imovel->situacao == 0) {
+                    return redirect('/imovel/' . $request->inscricao_municipal_imovel)->with('error_message', 'Imóvel já está inativo');
+                } else {
+                    $imovel->situacao = 0;
+                    $imovel->save();
+                }
+                break;
+            
+            case 'Reativação':
+                if ($imovel->situacao == 1) {
+                   return redirect('/imovel/' . $request->inscricao_municipal_imovel)->with('error_message', 'Imóvel já está ativo');
+                } else {
+                    $imovel->situacao = 1;
+                    $imovel->save();
+                }
+                break;
+        }
+
         Averbacao::create($data);
 
         return redirect('/imovel/' . $request->inscricao_municipal_imovel)->with('success_message', 'Averbação adicionada com sucesso');

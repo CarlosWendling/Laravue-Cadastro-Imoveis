@@ -32,7 +32,8 @@
                 </tr>
                 <tr 
                     v-if="props.averbacoes?.length != 0"
-                    v-for="averbacao in props.averbacoes"    
+                    v-for="averbacao in props.averbacoes"
+                    :key="averbacao.id"    
                 >
                     <td>{{ averbacao.id }}</td>
                     <td>{{ averbacao.evento }}</td>
