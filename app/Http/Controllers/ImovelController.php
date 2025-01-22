@@ -44,7 +44,7 @@ class ImovelController extends Controller
                 ] : null,
                 'situacao' => $imovel->situacao,
             ])
-            ->withQueryString();;
+            ->withQueryString();
 
         return Inertia::render('Imoveis/Imoveis', 
             [

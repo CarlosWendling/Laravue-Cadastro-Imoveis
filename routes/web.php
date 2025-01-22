@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\AverbacaoController;
 use App\Http\Controllers\ImovelController;
+use App\Http\Controllers\PdfController;
 use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsuarioController;
@@ -56,6 +57,9 @@ Route::middleware('auth')->group(function () {
         ->middleware([HandlePrecognitiveRequests::class])
         ->name('averbacao.store');
     Route::get('/imovel/averbacao/{id}', [AverbacaoController::class, 'show'])->name('averbacao.show');
+
+
+    Route::get('/pdf/download/relatorio-sintetico', [PdfController::class, 'downloadRelatorioSintetico'])->name('pdf.download');
 
 
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios');

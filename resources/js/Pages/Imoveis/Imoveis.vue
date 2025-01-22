@@ -88,6 +88,15 @@
                     Cadastrar
                 </Link>
             </Btn>
+
+            <Btn 
+                class="ml-3"
+                variant="tonal"
+            >
+                <a target="_blank" href="/pdf/download/relatorio-sintetico">
+                    Relatório
+                </a>
+            </Btn>
         </div>
     </div>
     <v-table>
