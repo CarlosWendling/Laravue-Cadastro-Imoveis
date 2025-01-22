@@ -59,7 +59,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/imovel/averbacao/{id}', [AverbacaoController::class, 'show'])->name('averbacao.show');
 
 
-    Route::get('/pdf/download/relatorio-sintetico', [PdfController::class, 'downloadRelatorioSintetico'])->name('pdf.download');
+    Route::get('/pdf/download/relatorio-sintetico', [PdfController::class, 'downloadRelatorioSintetico'])->name('pdfSintetico.download');
+    Route::get('/pdf/download/relatorio-analitico/{inscricao_municipal}', [PdfController::class, 'downloadRelatorioAnalitico'])->name('pdfAnalitico.download');
 
 
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios');

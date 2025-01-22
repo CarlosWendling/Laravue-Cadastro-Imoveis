@@ -19,7 +19,6 @@
         header {
             display: block;
             margin: 4rem 0 3rem;
-
         }
         
         header h3 {
@@ -36,11 +35,11 @@
             border-collapse: collapse;
         }
 
-        tr:nth-child(odd) {
+        tr:nth-child(even) {
             background-color: #f2f2f2;
         }
 
-        tr:nth-child(even) {
+        tr:nth-child(odd) {
             background-color: #ffffff;
         }
 

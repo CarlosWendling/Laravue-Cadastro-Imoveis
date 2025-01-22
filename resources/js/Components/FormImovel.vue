@@ -365,6 +365,16 @@
                     >
                         Adicionar arquivos
                     </Btn>
+
+                    <Btn 
+                        v-if="props.textBtn == 'Atualizar'"
+                        variant="tonal"
+                        class="ml-2"
+                    >
+                        <a target="_blank" :href="`/pdf/download/relatorio-analitico/${props.imovel.inscricao_municipal}`">
+                            Relatório
+                        </a>
+                    </Btn>
     
                     <MensagesArquivos 
                         :textBtn="props.textBtn" 
