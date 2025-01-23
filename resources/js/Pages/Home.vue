@@ -5,6 +5,25 @@
     const props = defineProps ({
         auditorias: Object
     })
+
+    const formatEvento = (value) => {
+        if (value == 'created') return 'Criação'
+        if (value == 'updated') return 'Atualização'
+        if (value == 'deleted') return 'Exclusão'
+    }
+
+    const formatTabela = (value) => {
+        let tabela = value.replace('App\\Models\\', '') + 's'
+
+        if (tabela == 'Users') 
+            return 'Usuários'
+        else if (tabela == 'Averbacaos')
+            return 'Averbações'
+        else if (tabela == 'Imovels')
+            return 'Imóveis'
+
+        return tabela
+    }
 </script>
 
 <template>
@@ -39,9 +58,9 @@
             >
                 <td>{{ auditoria.id }}</td>
                 <td>{{ auditoria.user.name }}</td>
-                <td>{{ auditoria.evento }}</td>
+                <td>{{ formatEvento(auditoria.evento) }}</td>
                 <td>{{ auditoria.created_at }}</td>
-                <td>{{ auditoria.tabela }}</td>
+                <td>{{ formatTabela(auditoria.tabela) }}</td>
                 <td>{{ auditoria.id_auditado }}</td>
                 <td>
                     <Btn

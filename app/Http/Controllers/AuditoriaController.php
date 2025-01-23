@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Auditoria;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Carbon\Carbon;
 
@@ -20,7 +19,7 @@ class AuditoriaController extends Controller
                     'name' => $auditoria->user->name,
                 ] : null,
                 'evento' => $auditoria->event, 
-                'created_at' => $auditoria->created_at, 
+                'created_at' => Carbon::parse($auditoria->created_at)->format('d/m/Y H:i:s'), 
                 'tabela' => $auditoria->auditable_type, 
                 'id_auditado' => $auditoria->auditable_id, 
             ])
