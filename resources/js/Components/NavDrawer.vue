@@ -18,7 +18,7 @@
     >
         <NavLink
             :href="route('home')"
-            :active="$page.component === 'Home'"
+            :active="$page.component.includes('Home') || $page.component.includes('Auditoria')"
         >
             Home
         </NavLink>

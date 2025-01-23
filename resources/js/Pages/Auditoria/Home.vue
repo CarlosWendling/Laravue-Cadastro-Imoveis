@@ -3,7 +3,10 @@
     import Pagination from '@/Components/Pagination.vue';
 
     const props = defineProps ({
-        auditorias: Object
+        auditorias: Object,
+        errors: Object,
+        auth: Object,
+        flash: Object
     })
 
     const formatEvento = (value) => {
@@ -66,7 +69,7 @@
                     <Btn
                         variant="tonal"
                     >
-                        <Link href="#">
+                        <Link :href="route('auditoria.show', auditoria.id)">
                             Detalhes
                         </Link>
                     </Btn>

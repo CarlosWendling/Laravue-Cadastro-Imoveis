@@ -17,6 +17,7 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/home', [AuditoriaController::class, 'index'])->name('home');
+    Route::get('/auditoria/{id}', [AuditoriaController::class, 'show'])->name('auditoria.show');
 
     Route::get('/pessoas', [PessoaController::class, 'index'])->name('pessoas');
     Route::get('/pessoas/cadastro', [PessoaController::class, 'create'])->name('pessoas.cadastro');
