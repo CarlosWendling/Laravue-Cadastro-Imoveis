@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuditoriaController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\AverbacaoController;
 use App\Http\Controllers\ImovelController;
@@ -7,19 +8,15 @@ use App\Http\Controllers\PdfController;
 use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsuarioController;
-use App\Models\Imovel;
-use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use Symfony\Component\HttpKernel\Profiler\Profile;
 
 Route::get('/', function () {
     return redirect('login');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/home', function () { return Inertia::render('Home'); })->name('home');
+    Route::get('/home', [AuditoriaController::class, 'index'])->name('home');
 
     Route::get('/pessoas', [PessoaController::class, 'index'])->name('pessoas');
     Route::get('/pessoas/cadastro', [PessoaController::class, 'create'])->name('pessoas.cadastro');

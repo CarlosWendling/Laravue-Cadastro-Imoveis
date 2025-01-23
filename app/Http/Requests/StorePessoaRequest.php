@@ -30,7 +30,7 @@ class StorePessoaRequest extends FormRequest
             'nome' => 'required|min:6',
             'data_nascimento' => ['required', new ValidacaoIdade()],
             'sexo' => 'required',
-            'cpf' => ['required', Rule::unique(Pessoa::class)->ignore($this->id), new ValidacaoCpf()],
+            'cpf' => ['required', Rule::unique(Pessoa::class)->ignore($this->id)], //new ValidacaoCpf()
             'email' => ['nullable', 'email', Rule::unique(Pessoa::class)->ignore($this->id)],
             'telefone' => 'nullable|min:11|max:11'
         ];
