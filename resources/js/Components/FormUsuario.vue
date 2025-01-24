@@ -178,7 +178,7 @@
                     md="6"
                 >
                     <v-select
-                        v-if="props.usuarioAtual.perfil == 'T'"
+                        v-if="props.usuarioAtual?.perfil == 'T'"
                         label="Perfil"
                         v-model="perfil"
                         :items="perfilsTI"
@@ -191,7 +191,7 @@
                     />
 
                     <v-select
-                        v-if="props.usuarioAtual.perfil == 'S'"
+                        v-if="props.usuarioAtual?.perfil == 'S'"
                         label="Perfil"
                         v-model="perfil"
                         :items="perfilsSistema"

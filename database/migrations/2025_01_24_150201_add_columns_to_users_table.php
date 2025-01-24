@@ -12,19 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->renameColumn('nome', 'name');
-            $table->renameColumn('senha', 'password');
+            $table->string('cpf', 11);
+            $table->char('perfil');
+            $table->char('ativo');
         });
     }
-    
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->renameColumn('name', 'nome');
-            $table->renameColumn('password', 'senha');
+            $table->dropColumn(['cpf', 'ativo', 'perfil']);
         });
     }
 };

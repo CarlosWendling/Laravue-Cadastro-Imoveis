@@ -51,7 +51,10 @@ class AuditoriaController extends Controller
         $dados_auditoria = [
             'id' => $auditoria->id,
             'data' => Carbon::parse($auditoria->created_at)->format('d/m/Y H:i:s'),
-            'user' => $auditoria->user->name,
+            'user' => $auditoria->user ? [
+                    'id' => $auditoria->user->id,
+                    'name' => $auditoria->user->name,
+                ] : null,
             'evento' => $auditoria->event,
             'tabela' => $auditoria->auditable_type,
             'id_auditado' => $auditoria->auditable_id,

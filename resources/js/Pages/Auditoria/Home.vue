@@ -67,7 +67,7 @@
                 :key="auditoria.id"
             >
                 <td>{{ auditoria.id }}</td>
-                <td>{{ auditoria.user.name }}</td>
+                <td>{{ auditoria.user?.name }}</td>
                 <td>{{ formatEvento(auditoria.evento) }}</td>
                 <td>{{ auditoria.created_at }}</td>
                 <td>{{ formatTabela(auditoria.tabela) }}</td>

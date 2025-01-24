@@ -29,7 +29,7 @@ class StoreUsuarioRequest extends FormRequest
             'name' => 'required|string|max:255|min:6',
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->id)],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'cpf' => ['required', Rule::unique(User::class)->ignore($this->id)], //new ValidacaoCpf()
+            'cpf' => ['required', Rule::unique(User::class)->ignore($this->id), new ValidacaoCpf()],
             'perfil' => 'required',
             'ativo' => 'required',
         ];
