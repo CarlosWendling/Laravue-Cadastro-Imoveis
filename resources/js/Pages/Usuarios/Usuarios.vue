@@ -59,6 +59,9 @@
             </tr>
         </thead>
         <tbody>
+            <tr v-if="props.usuarios.data.length == 0">
+                <td>Nenhum usuário encontrado</td>
+            </tr>
             <tr
                 v-for="usuario in props.usuarios.data"
                 :key="usuario.id"
@@ -67,7 +70,13 @@
                 <td>{{ usuario.name }}</td>
                 <td>{{ usuario.email }}</td>
                 <td>{{ formatPerfil(usuario.perfil) }}</td>
-                <td>{{ formatSituacao(usuario.ativo) }}</td>
+                <td>
+                    <span
+                        class="situacao-visual"
+                        :class="usuario.ativo == 'S' ? 'ativo' : 'inativo'"
+                    ></span>
+                    {{ formatSituacao(usuario.ativo) }}
+                </td>
                 <td>
                     <Btn
                         variant="tonal"
@@ -87,3 +96,22 @@
         class="mt-6 pb-2"
     />
 </template>
+
+<style scoped>
+    .situacao-visual {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 6px;
+        flex-shrink: 0;
+    }
+
+    .situacao-visual.ativo {
+        background-color: green;
+    }
+
+    .situacao-visual.inativo {
+        background-color: red;
+    }
+</style>
