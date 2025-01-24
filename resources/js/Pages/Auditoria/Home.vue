@@ -4,6 +4,9 @@
 
     const props = defineProps ({
         auditorias: Object,
+        usuarios: Object,
+        filtros: Array,
+        routeName: String,
         errors: Object,
         auth: Object,
         flash: Object
@@ -35,7 +38,11 @@
     <div class="flex justify-between py-5 border-b-2 items-center">
         <h1 class="text-2xl">Últimas Ações</h1>
 
-        <Filtro class="w-72" />
+        <Filtro
+            :filtros="props.filtros"
+            :routeName="props.routeName"
+            :usuarios="props.usuarios"
+        />
     </div>
 
     <v-table>
@@ -52,7 +59,7 @@
         </thead>
         <tbody>
             <tr v-if="props.auditorias.data.length == 0">
-                <td>Nenhuma ação foi realizada</td>
+                <td>Nenhuma ação encontrada</td>
             </tr>
             <tr 
                 v-if="props.auditorias.data.length != 0"

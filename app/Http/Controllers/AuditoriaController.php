@@ -3,13 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Auditoria;
+use App\Models\User;
 use Inertia\Inertia;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Route;
 
 class AuditoriaController extends Controller
-{
+{  
     public function index () {
+        $filtros = [
+            'Usuário',
+            'Evento',
+            'Data',
+            'Tabela'
+        ];
+        $routeName = Route::currentRouteName();
+        $usuarios = User::select('id', 'name')->get();
+
         $auditorias = Auditoria::with('user:id,name')
+            ->filter(request(['campo', 'pesquisa']))
             ->orderByDesc('created_at')
             ->paginate(10)
             ->through(fn($auditoria) => [
@@ -25,10 +37,11 @@ class AuditoriaController extends Controller
             ])
             ->withQueryString();
 
-        //dd($auditorias);
-
         return Inertia::render('Auditoria/Home', [
-            'auditorias' => $auditorias
+            'auditorias' => $auditorias,
+            'filtros' => $filtros,
+            'routeName' => $routeName,
+            'usuarios' => $usuarios
         ]);
     }
 

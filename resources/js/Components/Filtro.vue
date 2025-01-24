@@ -7,6 +7,7 @@
     const props = defineProps({
         filtros: Array,
         pessoas: Object,
+        usuarios: Object,
         routeName: String
     })
     
@@ -14,6 +15,41 @@
         campo: "",
         pesquisa: ""
     })
+
+    // Filtros Auditoria
+    const eventoFront = ref(null)
+    const tabelaFront = ref(null)
+    const usuarioFront = ref(null)
+
+    const usuarios = props.usuarios?.map(usuario => ({
+        label: usuario.name,
+        value: usuario.id
+    }));
+
+    const evento = [
+        { label: 'Criação', value: 'created' },
+        { label: 'Atualização', value: 'updated' },
+        { label: 'Exclusão', value: 'deleted' },
+    ]
+    
+    const tabela = [
+        { label: 'Pessoas', value: 'Pessoa' },
+        { label: 'Imóveis', value: 'Imovel' },
+        { label: 'Usuários', value: 'User' },
+    ]
+
+    watch(usuarioFront, value => {
+        search.value = value
+    })
+
+    watch(eventoFront, value => {
+        search.value = value
+    })
+
+    watch(tabelaFront, value => {
+        search.value = value
+    })
+
 
     // Filtros Pessoas
     const sexo = [
@@ -26,8 +62,20 @@
     const search = ref(form.pesquisa)
 
     watch(campo, value => {
-        if (value == "Data de Nascimento") {
-            form.campo = "data_nascimento"
+        const keyMappings = {
+            'Data de Nascimento': 'data_nascimento',
+            'Inscrição Municipal': 'inscricao_municipal',
+            Número: 'numero',
+            Situação: 'situacao',
+            Contribuinte: 'pessoa_id',
+            Evento: 'event',
+            Tabela: 'auditable_type',
+            Usuário: 'user_id',
+            Data: 'created_at'
+        }
+
+        if (keyMappings[value]) {
+            form.campo = keyMappings[value]
         } else {
             form.campo = campo.value
         }
@@ -77,21 +125,6 @@
     watch (dataSelecionada, () => {
         dataFront.value = formatDate(formatDateBack(dataSelecionada.value))
         search.value = formatDateBack(dataSelecionada.value)
-    })
-
-    // Filtros Imóveis
-    watch(campo, value => {
-        if (value == "Inscrição Municipal") {
-            form.campo = "inscricao_municipal"
-        } else if (value == "Número") {
-            form.campo = "numero"
-        } else if (value == "Situação") {
-            form.campo = "situacao"
-        } else if (value == "Contribuinte") {
-            form.campo = 'pessoa_id'
-        } else {
-            form.campo = campo.value
-        }
     })
 
     const tipo = [
@@ -191,6 +224,36 @@
             clearable
         />
 
+        <!-- Filtros Auditorias -->
+         <v-select 
+            v-if="campo == 'Usuário'"
+            class="w-64"
+            :items="usuarios"
+            item-title="label"
+            item-value="value"
+            v-model="usuarioFront"
+            clearable
+         />
+         <v-select 
+            v-if="campo == 'Evento'"
+            class="w-64"
+            :items="evento"
+            item-title="label"
+            item-value="value"
+            v-model="eventoFront"
+            clearable
+         />
+
+         <v-select 
+            v-if="campo == 'Tabela'"
+            class="w-64"
+            :items="tabela"
+            item-title="label"
+            item-value="value"
+            v-model="tabelaFront"
+            clearable
+         />
+
         <!-- Filtros Usuários -->
         <v-text-field
             v-if="campo == 'Nome' && props.routeName == 'usuarios'"
@@ -251,7 +314,7 @@
             :close-on-content-click="false"
             location="end"
             transition="slide-y-transition"
-            v-if="campo == 'Data de Nascimento'"
+            v-if="campo?.includes('Data')"
         >
             <template v-slot:activator="{ props }">
                 <v-text-field
@@ -264,6 +327,7 @@
             </template>
 
             <v-date-picker
+                v-if="campo == 'Data de Nascimento'"
                 color="indigo"
                 title="Selecione a data"
                 header="Data de Nasc"
@@ -272,6 +336,18 @@
                 :max="new Date()"
             >
                 Data de Nascimento
+            </v-date-picker> 
+
+            <v-date-picker
+                v-if="campo == 'Data'"
+                color="indigo"
+                title="Selecione a data"
+                header="Data da Ação"
+                v-model="dataSelecionada"
+                hide-weekdays
+                :max="new Date()"
+            >
+                Data da Ação
             </v-date-picker> 
         </v-menu>
 
