@@ -174,6 +174,16 @@
         return true
     }
 
+    const checkOversizedFiles = () => {
+        if (formArquivos.files?.length > 0) {
+            const oversizedFiles = formArquivos.files.filter((file) => file.size > maxSize)
+
+            if (oversizedFiles.length > 0) return true
+        }
+
+        return false
+    }
+
     const submitArquivos = () => {
         isDialogOpen.value = false
         formArquivos.submit(formArquivos)
@@ -210,17 +220,18 @@
         isAverbacoesOpen.value = false
     }
 
+    const combinedData = {
+            ...form.data(),
+            files: formArquivos.files
+        }
+
+    const combinedDataForm = useForm('post', route('imoveis.store'), combinedData)
+
     // Envio do formulário
     const submit = () => {
         if (props.textBtn == 'Atualizar') {
             form.submit(form.inscricao_municipal)
         } else {
-            const combinedData = {
-                ...form.data(),
-                files: formArquivos.files
-            }
-
-            const combinedDataForm = useForm('post', route('imoveis.store'), combinedData)
             combinedDataForm.submit(combinedDataForm)
         }
     }
@@ -329,7 +340,7 @@
                                 <Btn
                                     variant="flat"
                                     v-if="props.textBtn == 'Atualizar'"
-                                    :disabled="formArquivos.processing || countFiles > 5"
+                                    :disabled="formArquivos.processing || countFiles > 5 || checkOversizedFiles()"
                                     type="submit"
                                 >
                                     Adicionar
@@ -394,8 +405,8 @@
                     <v-text-field 
                         label="Logradouro"
                         v-model="form.logradouro"
-                        @change="form.validate('logradouro')"
-                        :error-messages="form.errors.logradouro"
+                        @change="form.validate('logradouro') || combinedDataForm.validate('logradouro')"
+                        :error-messages="form.errors.logradouro ||combinedDataForm.errors.logradouro"
                         required
                     />
                 </v-col>
@@ -407,8 +418,8 @@
                     <v-text-field 
                         label="Bairro"
                         v-model="form.bairro"
-                        @change="form.validate('bairro')"
-                        :error-messages="form.errors.bairro"
+                        @change="form.validate('bairro') || combinedDataForm.validate('bairro')"
+                        :error-messages="form.errors.bairro ||combinedDataForm.errors.bairro"
                         required
                     />
                 </v-col>
@@ -432,8 +443,8 @@
                     <NumberInput 
                         label="Número"
                         v-model="form.numero"
-                        @change="form.validate('numero')"
-                        :error-messages="form.errors.numero"
+                        @change="form.validate('numero') || combinedDataForm.validate('numero')"
+                        :error-messages="form.errors.numero ||combinedDataForm.errors.numero"
                         required
                     />
                 </v-col>
@@ -450,8 +461,8 @@
                     item-value="id"
                     required
                     clearable
-                    @change="form.validate('contribuinte')"
-                    :error-messages="form.errors.contribuinte"
+                    @change="form.validate('contribuinte') || combinedDataForm.validate('contribuinte')"
+                    :error-messages="form.errors.contribuinte || combinedDataForm.errors.contribuinte"
                     />
                 </v-col>
             </v-row>
@@ -466,8 +477,8 @@
                         v-model="terrenoFront"
                         @focus="handleFocus" 
                         @blur="handleBlur"
-                        @change="form.validate('area_terreno')"
-                        :error-messages="form.errors?.area_terreno"
+                        @change="form.validate('area_terreno') || combinedDataForm.validate('area_terreno')"
+                        :error-messages="form.errors?.area_terreno || combinedDataForm?.errors.area_terreno"
                     />
                 </v-col>
 
@@ -482,8 +493,8 @@
                         v-model="edificacaoFront"
                         @focus="handleFocus" 
                         @blur="handleBlur" 
-                        @change="form.validate('area_edificacao')"
-                        :error-messages="form.errors.area_edificacao"
+                        @change="form.validate('area_edificacao') || combinedDataForm.validate('area_edificacao')"
+                        :error-messages="form.errors.area_edificacao || combinedDataForm?.errors.area_edificacao"
                     />
                 </v-col>
 
@@ -497,8 +508,8 @@
                         v-model="tipo"
                         clearable
                         @blur="handleBlurTipo"
-                        @change="form.validate('tipo')"
-                        :error-messages="form.errors.tipo"
+                        @change="form.validate('tipo') || combinedDataForm.validate('tipo')"
+                        :error-messages="form.errors.tipo || combinedDataForm?.errors.tipo"
                         required
                     />
                 </v-col>
