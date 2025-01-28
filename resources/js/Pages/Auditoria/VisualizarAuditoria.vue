@@ -100,14 +100,14 @@
     <v-table class="pb-8">
         <tbody class="text-base">
             <tr class="text-2xl">
-                <h1 class="pl-3 pt-6 pb-1 mb-3">Auditoria</h1>
+                <td class="pl-3 pt-6 pb-1 mb-3">Auditoria</td>
             </tr>
             <tr>
                 <td class="border-2"><span class="font-bold">Id: </span> {{ props.auditoria.id }}</td>
                 <td class="border-2"><span class="font-bold">Data e Hora: </span>{{ props.auditoria.data }}</td>
             </tr>
             <tr>
-                <td class="border-2"><span class="font-bold">Usuário: </span>{{ props.auditoria.user }}</td>
+                <td class="border-2"><span class="font-bold">Usuário: </span>{{ props.auditoria.user.name }}</td>
                 <td class="border-2"><span class="font-bold">Evento: </span>{{ formatEvento(props.auditoria.evento) }}</td>
             </tr>
             <tr>
@@ -127,7 +127,7 @@
     >
         <tbody class="text-base">
             <tr class="text-2xl">
-                <h1 class="pl-3 pt-6 pb-1 mb-3">Dados Anteriores</h1>
+                <td class="pl-3 pt-6 pb-1 mb-3">Dados Anteriores</td>
             </tr>
             <tr
                 v-for="(value, key) in props.dados_anteriores"
@@ -144,7 +144,7 @@
     >
         <tbody class="text-base">
             <tr class="text-2xl">
-                <h1 class="pl-3 pt-6 pb-1 mb-3">Dados Novos</h1>
+                <td class="pl-3 pt-6 pb-1 mb-3">Dados Novos</td>
             </tr>
             <tr
                 v-for="(value, key) in props.dados_novos"
